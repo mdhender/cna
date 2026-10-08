@@ -14,6 +14,7 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `features/<area>/` holds the Gherkin feature files for one rules area (`dice`, `combat`, `movement`, ...), with their godog step definitions beside them. See [Behavior-driven development](#behavior-driven-development).
 - `internal/dice` rolls dice. Every random outcome goes through its `Source` interface.
 - `internal/breakdown` resolves Breakdown checks on the Breakdown Table [21.38].
+- `internal/toe` holds the weapon systems that make up TOE Strength Points, with the Tank and Gun Characteristics Charts [4.47–4.49] as data.
 - `features/steps` holds step definitions shared by more than one feature area, such as the steps that fix the dice.
 - `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules.
 - `version.go` holds the version (`cna.Version()`, using `github.com/maloquacious/semver`).
@@ -76,6 +77,8 @@ The feature files are the specification. They're written so players can check th
 - Write steps in plain game language ("the tens die will roll 3"), not in terms of Go types or functions. Reuse an existing step's wording before inventing a new one. When a step is needed in more than one area, move it to `features/steps` and register it from each runner.
 - godog matches step text without regard to `Given`, `When` or `Then`, so an action and an assertion need different wording ("the unit suffers 10% Breakdown" versus "the result is 10% Breakdown").
 - Group a feature's scenarios with `Rule:`, one rule per idea, so a reader can check each idea against the rulebook on its own.
+- Quote names that can contain spaces or punctuation (`the Commonwealth "Heavy AA (3.7")" never breaks down`), and match them with `"(.+)"`, not `"([^"]+)"`, since some names contain quotes.
+- Write a scenario for behavior that depends on something not yet built (such as the game calendar) and tag it `@wip`, so the requirement is recorded where players can see it.
 - Step definitions are thin. They set up state, call the engine, and compare results. Game logic belongs in `internal/`, never in steps.
 - Keep each scenario's state in a `world` struct that is reset before every scenario.
 - Fix the dice in rule scenarios with a scripted step such as "the tens die will roll 3 and the ones die will roll 4". Use a seeded roller only for scenarios about the dice themselves.
@@ -93,6 +96,8 @@ Feature files are documentation, so the no-quoting rule applies to them. Describ
 ### Charts
 
 A feature that implements a chart starts with a scenario holding a copy of the whole chart as a Gherkin data table, laid out like the printed chart. Its step compares the engine's data with the copy cell by cell and reports every cell that differs. A player can check the copy against the printed chart by eye, and the engine can't drift from it. `features/breakdown/breakdown_table.feature` is the example to follow.
+
+Keep the chart data in Go in the chart's own layout, one call per row with the cells as printed (see `internal/toe/charts.go`), so it can be read against the chart line by line. Apply errata in the data, say so in a comment, and add `@errata` scenarios for each correction.
 
 Then cover how the chart is used: the boundaries of each column and row, the shifts, and what happens at the edges of the table. Use an `@engine` scenario to check the data's integrity, such as every dice reading giving exactly one result.
 

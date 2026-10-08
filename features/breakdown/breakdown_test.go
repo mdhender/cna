@@ -34,11 +34,12 @@ func TestFeatures(t *testing.T) {
 
 // world holds the state of one scenario.
 type world struct {
-	check  breakdown.Check
-	toe    int
-	src    dice.Source
-	result breakdown.Result
-	broken int
+	check   breakdown.Check
+	toe     int
+	src     dice.Source
+	result  breakdown.Result
+	broken  int
+	printed breakdown.Rating
 }
 
 func initializeScenario(sc *godog.ScenarioContext) {
@@ -58,6 +59,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 
 	sc.Step(`^the unit stops moving$`, w.stops)
 	sc.Step(`^the unit suffers (\d+)% Breakdown$`, w.suffers)
+	sc.Step(`^the printed rating (\S+) is read$`, w.readRating)
 
 	sc.Step(`^the Breakdown Table reads:$`, w.tableReads)
 	sc.Step(`^every column of the Breakdown Table gives exactly one result for each sequential reading$`, w.everyReadingOnce)
@@ -66,6 +68,8 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^the dice read (\d+)$`, w.diceRead)
 	sc.Step(`^the result is (\d+)% Breakdown$`, w.resultIs)
 	sc.Step(`^(\d+) TOE Strength Points? breaks? down$`, w.pointsBreakDown)
+	sc.Step(`^the vehicles break down with the column shifted (\d+) columns?(?: (left|right))?$`, w.shifted)
+	sc.Step(`^the vehicles never break down$`, w.neverBreakDown)
 }
 
 func (w *world) accumulated(points float64) error {
@@ -206,6 +210,34 @@ func (w *world) resultIs(want int) error {
 func (w *world) pointsBreakDown(want int) error {
 	if w.broken != want {
 		return fmt.Errorf("TOE Strength Points broken down: got %d, want %d", w.broken, want)
+	}
+	return nil
+}
+
+func (w *world) readRating(printed string) error {
+	r, err := breakdown.ParseRating(printed)
+	w.printed = r
+	return err
+}
+
+func (w *world) shifted(columns int, side string) error {
+	want := columns
+	if side == "left" {
+		want = -columns
+	}
+	bar, ok := w.printed.BAR()
+	if !ok {
+		return fmt.Errorf("rating %s: the vehicles never break down", w.printed)
+	}
+	if int(bar) != want {
+		return fmt.Errorf("rating %s: got a shift of %d, want %d", w.printed, bar, want)
+	}
+	return nil
+}
+
+func (w *world) neverBreakDown() error {
+	if bar, ok := w.printed.BAR(); ok {
+		return fmt.Errorf("rating %s: the vehicles break down with a shift of %d", w.printed, bar)
 	}
 	return nil
 }

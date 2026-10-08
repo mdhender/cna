@@ -34,3 +34,27 @@ The notes under the Breakdown Table (21.38) measure Breakdown Points instead: th
 The two can give different answers, for example when a unit moves cheaply along a road in a Sandstorm and then expensively across rough terrain in clear weather.
 
 The Breakdown Table itself doesn't depend on this. `breakdown.Check` takes a yes-or-no `Sandstorm` flag, and the rule that sets it must be decided before movement is implemented.
+
+## R-003: A dash in the BAR column means the vehicles never break down
+
+- **Status:** Decided (2026-10-08)
+- **Cases:** 3.4, 21.11, charts 4.47–4.49 (BAR column and key)
+
+The key to the Tank and Gun Characteristics Charts says a dash means "not applicable or zero", and one of the order of battle spreadsheets records the guns' BAR as 0.
+Read as zero, a dash would make towed guns break down without a column shift.
+
+**Resolution:** a dash in the BAR column means the weapon system never breaks down, which is different from a rating of 0.
+Case 21.11 lists the only vehicles that break down (trucks, tanks, armored cars and recce, and self-propelled guns), and Case 3.4 says towed artillery isn't subject to Breakdown.
+On all three charts, every tank and self-propelled gun has a rating and every towed gun has a dash, so this reading matches the charts exactly.
+The `@ruling` scenarios in `features/breakdown/rating.feature` and `features/units/tank_and_gun_characteristics.feature` pin this down.
+
+## R-004: When German tanks stop having a BAR of 1R
+
+- **Status:** Open
+- **Cases:** chart 4.49 (notes), 21.36
+
+A note to the German Tank and Gun Characteristics Chart gives all German tanks a BAR of 1R until the start of the "1/31" Game-Turn, after which the printed rating (0) applies.
+Case 21.36 says all German tanks have a BAR of 0, and doesn't mention the early rating.
+It isn't clear which Game-Turn "1/31" names: Game-Turn 31, or a date such as the turn containing January 31.
+
+The engine uses the printed rating until this is decided. The `@wip` scenario "German tanks have a rating of 1R early in the campaign" waits on this ruling and on the game calendar.

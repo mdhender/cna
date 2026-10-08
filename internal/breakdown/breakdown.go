@@ -135,6 +135,46 @@ func (b BAR) String() string {
 	return "0"
 }
 
+// Rating is a Breakdown Adjustment Rating as printed on the Tank and Gun
+// Characteristics Charts [4.47–4.49]: a column shift, or Exempt for
+// vehicles that never break down. A Rating of 0 is not Exempt: those
+// vehicles break down without shifting the column. See ruling R-003.
+type Rating struct {
+	bar    BAR
+	exempt bool
+}
+
+// Exempt is the Rating of vehicles that never break down, printed "-".
+var Exempt = Rating{exempt: true}
+
+// RatingOf returns the Rating for vehicles that break down with BAR b.
+func RatingOf(b BAR) Rating {
+	return Rating{bar: b}
+}
+
+// ParseRating parses a Rating as printed: "-" for Exempt, or a BAR such as
+// "0", "2L" or "1R".
+func ParseRating(s string) (Rating, error) {
+	if s == "-" {
+		return Exempt, nil
+	}
+	b, err := ParseBAR(s)
+	return RatingOf(b), err
+}
+
+// BAR returns the column shift, and false if the vehicles never break down.
+func (r Rating) BAR() (BAR, bool) {
+	return r.bar, !r.exempt
+}
+
+// String returns the Rating as printed.
+func (r Rating) String() string {
+	if r.exempt {
+		return "-"
+	}
+	return r.bar.String()
+}
+
 // Check is one Breakdown check for one group of TOE Strength Points that
 // share a Breakdown Adjustment Rating [21.28].
 type Check struct {
