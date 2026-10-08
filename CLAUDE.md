@@ -71,10 +71,10 @@ The feature files are the specification. They're written so players can check th
 - Write a feature file first, then the step definitions, then the engine code that makes them pass.
 - One folder per rules area: `features/<area>/<topic>.feature`, with steps in `features/<area>/<area>_test.go` (package `<area>_test`). Each folder has its own `TestFeatures` runner.
 - The runner is strict: a step without a definition fails the build. Scenarios tagged `@wip` are skipped, so unfinished work can be merged without breaking `main`.
-- Write steps in plain game language ("the large die will roll 3"), not in terms of Go types or functions. Reuse an existing step's wording before inventing a new one.
+- Write steps in plain game language ("the tens die will roll 3"), not in terms of Go types or functions. Reuse an existing step's wording before inventing a new one.
 - Step definitions are thin. They set up state, call the engine, and compare results. Game logic belongs in `internal/`, never in steps.
 - Keep each scenario's state in a `world` struct that is reset before every scenario.
-- Fix the dice in rule scenarios with a scripted step such as "the large die will roll 3 and the small die will roll 4". Use a seeded roller only for scenarios about the dice themselves.
+- Fix the dice in rule scenarios with a scripted step such as "the tens die will roll 3 and the ones die will roll 4". Use a seeded roller only for scenarios about the dice themselves.
 
 ### Tags
 

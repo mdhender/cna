@@ -46,7 +46,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	})
 
 	sc.Step(`^the die will roll (\d+)$`, w.dieWillRoll)
-	sc.Step(`^the large die will roll (\d+) and the small die will roll (\d+)$`, w.diceWillRoll)
+	sc.Step(`^the tens die will roll (\d+) and the ones die will roll (\d+)$`, w.diceWillRoll)
 	sc.Step(`^a dice roller seeded with (\d+) and (\d+)$`, w.rollerSeeded)
 	sc.Step(`^a second dice roller seeded with (\d+) and (\d+)$`, w.secondRollerSeeded)
 
@@ -72,8 +72,8 @@ func (w *world) dieWillRoll(face int) error {
 	return nil
 }
 
-func (w *world) diceWillRoll(large, small int) error {
-	w.src = dice.NewScript(large, small)
+func (w *world) diceWillRoll(tens, ones int) error {
+	w.src = dice.NewScript(tens, ones)
 	return nil
 }
 

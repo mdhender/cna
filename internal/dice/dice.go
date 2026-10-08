@@ -4,11 +4,12 @@
 // Package dice rolls the six-sided dice the game uses.
 //
 // The rules read dice three ways: one die (1 to 6), two dice added
-// together (2 to 12), and two dice read sequentially (11 to 66). A
-// sequential read uses two dice of different sizes. The large die gives
-// the tens digit and the small die gives the units digit, so all 36
-// combinations are possible and equally likely [3.1]. A single throw of
-// two dice may be read both sequentially and as a sum [15.73].
+// together (2 to 12), and two dice read sequentially (11 to 66). For a
+// sequential read, one die is designated the tens die and the other the
+// ones die before the throw. The reading is the tens die then the ones
+// die, whichever shows more, so all 36 combinations are possible and
+// equally likely [3.1]. A single throw of two dice may be read both
+// sequentially and as a sum [15.73].
 package dice
 
 import (
@@ -68,8 +69,8 @@ func (s *Script) Face() int {
 
 // Throw is one throw of two dice.
 type Throw struct {
-	Large int // face of the large die
-	Small int // face of the small die
+	Tens int // face of the die designated as the tens digit
+	Ones int // face of the die designated as the ones digit
 }
 
 // One rolls one die.
@@ -77,19 +78,19 @@ func One(src Source) int {
 	return src.Face()
 }
 
-// Two throws two dice. The large die is drawn from src first.
+// Two throws two dice. The tens die is drawn from src first.
 func Two(src Source) Throw {
-	large := src.Face()
-	return Throw{Large: large, Small: src.Face()}
+	tens := src.Face()
+	return Throw{Tens: tens, Ones: src.Face()}
 }
 
 // Sum reads the throw by adding the dice, giving 2 to 12.
 func (t Throw) Sum() int {
-	return t.Large + t.Small
+	return t.Tens + t.Ones
 }
 
-// Sequential reads the throw with the large die as the tens digit and
-// the small die as the units digit, giving 11 to 66 [3.1].
+// Sequential reads the throw as a two-digit number, the tens die then
+// the ones die, giving 11 to 66 [3.1].
 func (t Throw) Sequential() int {
-	return t.Large*10 + t.Small
+	return t.Tens*10 + t.Ones
 }

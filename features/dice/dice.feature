@@ -1,9 +1,9 @@
 Feature: Rolling dice
   The game uses ordinary six-sided dice, read in three ways.
   One die gives 1 to 6. Two dice added together give 2 to 12.
-  Two dice read sequentially give 11 to 66: the large die is the tens
-  digit and the small die is the units digit, so the two dice must be
-  told apart by size, not by which shows the higher number.
+  Two dice read sequentially give 11 to 66. Before the throw, one die is
+  designated the tens die and the other the ones die. The reading is the
+  tens die then the ones die, whichever shows the higher number.
 
   @case-16.33
   Scenario: Rolling one die
@@ -13,35 +13,35 @@ Feature: Rolling dice
 
   @case-3.1 @case-12.42 @case-15.73
   Scenario Outline: Reading two dice sequentially
-    Given the large die will roll <large> and the small die will roll <small>
+    Given the tens die will roll <tens> and the ones die will roll <ones>
     When the player throws two dice
     Then the sequential reading is <reading>
 
     Examples:
-      | large | small | reading |
-      | 2     | 5     | 25      |
-      | 5     | 2     | 52      |
-      | 3     | 4     | 34      |
-      | 6     | 3     | 63      |
-      | 1     | 1     | 11      |
-      | 6     | 6     | 66      |
+      | tens | ones | reading |
+      | 2    | 5    | 25      |
+      | 5    | 2    | 52      |
+      | 3    | 4    | 34      |
+      | 6    | 3    | 63      |
+      | 1    | 1    | 11      |
+      | 6    | 6    | 66      |
 
   @case-15.73
   Scenario Outline: Adding two dice
-    Given the large die will roll <large> and the small die will roll <small>
+    Given the tens die will roll <tens> and the ones die will roll <ones>
     When the player throws two dice
     Then the sum is <sum>
 
     Examples:
-      | large | small | sum |
-      | 1     | 1     | 2   |
-      | 3     | 4     | 7   |
-      | 4     | 3     | 7   |
-      | 6     | 6     | 12  |
+      | tens | ones | sum |
+      | 1    | 1    | 2   |
+      | 3    | 4    | 7   |
+      | 4    | 3    | 7   |
+      | 6    | 6    | 12  |
 
   @case-15.73
   Scenario: Reading one throw both ways
-    Given the large die will roll 3 and the small die will roll 4
+    Given the tens die will roll 3 and the ones die will roll 4
     When the player throws two dice
     Then the sequential reading is 34
     And the sum is 7
