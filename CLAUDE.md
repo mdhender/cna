@@ -11,14 +11,17 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `cmd/cna` is the command-line front end.
 - `cmd/cnad` is the web server. Its pages use HTMX: the server renders HTML fragments, and there is no client-side framework.
 - Both front ends are thin. Game logic goes in the engine, never in a `cmd/` package.
-- `features/` holds work organized by rules area (`combat`, `movement`, ...).
+- `features/<area>/` holds the Gherkin feature files for one rules area (`dice`, `combat`, `movement`, ...), with their godog step definitions beside them. See [Behavior-driven development](#behavior-driven-development).
+- `internal/dice` rolls dice. Every random outcome goes through its `Source` interface.
+- `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules.
 - `version.go` holds the version (`cna.Version()`, using `github.com/maloquacious/semver`).
 
 ## Commands
 
 ```sh
 go build ./...
-go test ./...
+go test ./...                                   # includes every feature file
+go test ./features/dice -run 'TestFeatures/Adding_two_dice'   # one scenario
 go vet ./...
 go mod tidy    # after adding or removing imports
 ```
@@ -56,10 +59,32 @@ Every die roll and other random outcome uses `math/rand/v2` with a source that i
 
 - Never call the top-level functions in `math/rand/v2` (`rand.IntN`, `rand.Shuffle`, ...). They use a randomly seeded global source, so their results can't be replayed. Never use `math/rand` (v1) or `crypto/rand` for game outcomes either.
 - Build generators from an explicit seed, using `rand.NewPCG(seed1, seed2)` or `rand.NewChaCha8(seed)`, and wrap the source with `rand.New`.
-- Pass the `*rand.Rand` (or an interface around it) into the code that needs it. Don't store it in a package-level variable.
+- Draw dice through `dice.Source` (`internal/dice`). The engine uses a seeded `dice.Roller`; tests use a `dice.Script` of preset faces. Pass the source into the code that needs it. Don't store it in a package-level variable.
 - The same seed and the same sequence of player inputs must produce the same game. Record the seed with the game state so any game can be replayed.
 - Keep the order of rolls stable. Ranging over a map gives a random order, so sort the keys first whenever a loop draws random numbers.
 - In tests, use fixed seeds and assert on exact outcomes.
+
+## Behavior-driven development
+
+The feature files are the specification. They're written so players can check them against the rulebooks and errata without reading Go, and godog runs them directly as tests, so what players check is exactly what is tested.
+
+- Write a feature file first, then the step definitions, then the engine code that makes them pass.
+- One folder per rules area: `features/<area>/<topic>.feature`, with steps in `features/<area>/<area>_test.go` (package `<area>_test`). Each folder has its own `TestFeatures` runner.
+- The runner is strict: a step without a definition fails the build. Scenarios tagged `@wip` are skipped, so unfinished work can be merged without breaking `main`.
+- Write steps in plain game language ("the large die will roll 3"), not in terms of Go types or functions. Reuse an existing step's wording before inventing a new one.
+- Step definitions are thin. They set up state, call the engine, and compare results. Game logic belongs in `internal/`, never in steps.
+- Keep each scenario's state in a `world` struct that is reset before every scenario.
+- Fix the dice in rule scenarios with a scripted step such as "the large die will roll 3 and the small die will roll 4". Use a seeded roller only for scenarios about the dice themselves.
+
+### Tags
+
+- `@case-<n>` on every scenario that comes from a rule, one tag per case it depends on (for example `@case-15.73`). This is how a reader finds the rule to check it against.
+- `@errata` when the errata changes the behavior.
+- `@ruling` when the rules are wrong, contradictory or silent, and the scenario pins down our decision. Every `@ruling` scenario has a matching entry in `RULINGS.md`.
+- `@engine` for behavior the engine needs that no rule states, such as repeatable dice.
+- `@wip` for scenarios that are written but not yet passing.
+
+Feature files are documentation, so the no-quoting rule applies to them. Describe rules in your own words. Chart data may go into `Examples:` tables.
 
 ## Versioning and commits
 
