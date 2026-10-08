@@ -39,6 +39,7 @@ The Breakdown Table itself doesn't depend on this. `breakdown.Check` takes a yes
 
 - **Status:** Decided (2026-10-08)
 - **Cases:** 3.4, 21.11, charts 4.47–4.49 (BAR column and key)
+- **Docs issue:** [mdhender/cnadocs#3](https://github.com/mdhender/cnadocs/issues/3)
 
 The key to the Tank and Gun Characteristics Charts says a dash means "not applicable or zero", and one of the order of battle spreadsheets records the guns' BAR as 0.
 Read as zero, a dash would make towed guns break down without a column shift.
@@ -52,6 +53,7 @@ The `@ruling` scenarios in `features/breakdown/rating.feature` and `features/uni
 
 - **Status:** Open
 - **Cases:** chart 4.49 (notes), 21.36
+- **Docs issue:** [mdhender/cnadocs#4](https://github.com/mdhender/cnadocs/issues/4)
 
 A note to the German Tank and Gun Characteristics Chart gives all German tanks a BAR of 1R until the start of the "1/31" Game-Turn, after which the printed rating (0) applies.
 Case 21.36 says all German tanks have a BAR of 0, and doesn't mention the early rating.
