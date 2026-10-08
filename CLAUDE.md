@@ -71,5 +71,10 @@ Every die roll and other random outcome uses `math/rand/v2` with a source that i
 
 ## Conventions
 
-- Every Go file starts with `// Copyright (c) 2026 Michael D Henderson. All rights reserved.`
+- Every Go file starts with this header:
+
+  ```go
+  // Copyright (c) 2026 Michael D Henderson.
+  // SPDX-License-Identifier: AGPL-3.0-or-later
+  ```
 - Follow the Modern Go Guidelines (the `use-modern-go` skill) when writing Go.

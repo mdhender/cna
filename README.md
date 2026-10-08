@@ -12,5 +12,5 @@ You're responsible for finding players and time.
 **The Campaign for North Africa**'s rules, map, and counters are Copyright © 1979, Simulations Publications, Inc.
 No rights for these materials is included in this project.
 
-The Go code and web site design are Copyright © 2026, Michael D Henderson, and are released under the AGLPv3.
+The Go code and web site design are Copyright © 2026, Michael D Henderson, and are released under the AGPLv3.
 See `LICENSE` in the root of this repository for the license text.
