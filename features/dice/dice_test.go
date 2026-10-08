@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/mdhender/cna/features/steps"
 	"github.com/mdhender/cna/internal/dice"
 )
 
@@ -45,8 +46,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 		return ctx, nil
 	})
 
-	sc.Step(`^the die will roll (\d+)$`, w.dieWillRoll)
-	sc.Step(`^the tens die will roll (\d+) and the ones die will roll (\d+)$`, w.diceWillRoll)
+	steps.Dice(sc, &w.src)
 	sc.Step(`^a dice roller seeded with (\d+) and (\d+)$`, w.rollerSeeded)
 	sc.Step(`^a second dice roller seeded with (\d+) and (\d+)$`, w.secondRollerSeeded)
 
@@ -65,16 +65,6 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^no other sequential reading occurs$`, w.noOtherReading)
 	sc.Step(`^both rollers throw the same dice in the same order$`, w.sameThrows)
 	sc.Step(`^the rollers throw different dice$`, w.differentThrows)
-}
-
-func (w *world) dieWillRoll(face int) error {
-	w.src = dice.NewScript(face)
-	return nil
-}
-
-func (w *world) diceWillRoll(tens, ones int) error {
-	w.src = dice.NewScript(tens, ones)
-	return nil
 }
 
 func (w *world) rollerSeeded(seed1, seed2 int) error {
