@@ -4,11 +4,13 @@
 package units_test
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/mdhender/cna/internal/gametime"
 	"github.com/mdhender/cna/internal/toe"
 )
 
@@ -30,12 +32,26 @@ func TestFeatures(t *testing.T) {
 
 const nationality = `(Commonwealth|Italian|German)`
 
+// world holds the state of one scenario.
+type world struct {
+	// time is the game time, or nil to use the ratings printed on the charts.
+	time *gametime.Time
+}
+
 func initializeScenario(sc *godog.ScenarioContext) {
+	w := &world{}
+	sc.Before(func(ctx context.Context, _ *godog.Scenario) (context.Context, error) {
+		*w = world{}
+		return ctx, nil
+	})
+
+	sc.Step(`^the time is (\S+)$`, w.timeIs)
 	sc.Step(`^the `+nationality+` (tank|artillery|anti-tank|anti-air) weapon systems read:$`, systemsRead)
 	sc.Step(`^the `+nationality+` "(.+)" reads:$`, systemReads)
 	sc.Step(`^the `+nationality+` "(.+)" has a CPA of (\S+)$`, hasCPA)
 	sc.Step(`^the `+nationality+` "(.+)" has an Armor Protection Rating of (\S+)$`, hasArmorProtection)
-	sc.Step(`^the `+nationality+` "(.+)" breaks down with a rating of (\S+)$`, breaksDownWith)
+	sc.Step(`^the `+nationality+` "(.+)" breaks down with a rating of (\S+)$`, w.breaksDownWith)
+	sc.Step(`^the `+nationality+` "(.+)" has an Anti-Armor Rating of (\S+)$`, w.hasAntiArmor)
 	sc.Step(`^the `+nationality+` "(.+)" never breaks down$`, neverBreaksDown)
 	sc.Step(`^every tank and self-propelled gun has a Breakdown Adjustment Rating$`, everyVehicleHasRating)
 	sc.Step(`^no other weapon system has one$`, noOtherHasRating)
@@ -167,7 +183,13 @@ func hasArmorProtection(nat, name, want string) error {
 	return nil
 }
 
-func breaksDownWith(nat, name, want string) error {
+func (w *world) timeIs(s string) error {
+	t, err := gametime.Parse(s)
+	w.time = &t
+	return err
+}
+
+func (w *world) breaksDownWith(nat, name, want string) error {
 	s, err := lookup(nat, name)
 	if err != nil {
 		return err
@@ -175,12 +197,31 @@ func breaksDownWith(nat, name, want string) error {
 	if !s.SubjectToBreakdown() {
 		return fmt.Errorf("%s is not subject to Breakdown", name)
 	}
-	bar, ok := s.Breakdown.BAR()
+	rating := s.Breakdown
+	if w.time != nil {
+		rating = s.BreakdownAt(*w.time)
+	}
+	bar, ok := rating.BAR()
 	if !ok {
 		return fmt.Errorf("%s has no Breakdown Adjustment Rating", name)
 	}
 	if got := bar.String(); got != want {
 		return fmt.Errorf("%s rating: got %s, want %s", name, got, want)
+	}
+	return nil
+}
+
+func (w *world) hasAntiArmor(nat, name, want string) error {
+	s, err := lookup(nat, name)
+	if err != nil {
+		return err
+	}
+	rating := s.AntiArmor
+	if w.time != nil {
+		rating = s.AntiArmorAt(*w.time)
+	}
+	if got := rating.String(); got != want {
+		return fmt.Errorf("%s Anti-Armor: got %s, want %s", name, got, want)
 	}
 	return nil
 }

@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/mdhender/cna/internal/breakdown"
+	"github.com/mdhender/cna/internal/gametime"
 )
 
 // Nationality is the army a weapon system belongs to.
@@ -59,6 +60,10 @@ type System struct {
 	CloseAssaultDef Rating
 	FuelRate        Rating
 	Breakdown       breakdown.Rating
+
+	// antiArmorFrom is when the AntiArmor rating starts to apply; before
+	// then it is zero. The zero Time means it always applies.
+	antiArmorFrom gametime.Time
 }
 
 // Systems returns the weapon systems of a nationality and class, in the
@@ -93,6 +98,28 @@ func Lookup(n Nationality, name string) (System, bool) {
 // guns move on their own transport, which never breaks down [3.4].
 func (s System) SubjectToBreakdown() bool {
 	return s.Class == Tank || s.SelfPropelled
+}
+
+// germanTanksSettle is when German tanks lose their early 1R rating and
+// take the rating printed on the chart [4.49] (ruling R-004).
+var germanTanksSettle = gametime.MustParse("1/31")
+
+// BreakdownAt returns the system's Breakdown Adjustment Rating at time t.
+// German tanks have a rating of 1R before Game-Turn 31 [4.49].
+func (s System) BreakdownAt(t gametime.Time) breakdown.Rating {
+	if s.Nationality == German && s.Class == Tank && t.Before(germanTanksSettle) {
+		return breakdown.RatingOf(1)
+	}
+	return s.Breakdown
+}
+
+// AntiArmorAt returns the system's Anti-Armor Rating at time t. A few
+// guns have no anti-armor rating until January 1942 [4.48, 4.49].
+func (s System) AntiArmorAt(t gametime.Time) Rating {
+	if t.Before(s.antiArmorFrom) {
+		return Rating{present: true}
+	}
+	return s.AntiArmor
 }
 
 // Rating is one numeric cell of a characteristics chart. It may be "-"
@@ -215,5 +242,12 @@ func row(n Nationality, c Class, name, cpa, aa, barrage, antiArmor, vul, armor, 
 func sp(n Nationality, c Class, name, cpa, aa, barrage, antiArmor, vul, armor, closeAssault, fuel, bar string) System {
 	s := row(n, c, name, cpa, aa, barrage, antiArmor, vul, armor, closeAssault, fuel, bar)
 	s.SelfPropelled = true
+	return s
+}
+
+// antiArmorFrom marks a system whose anti-armor rating applies only from
+// time from.
+func antiArmorFrom(from string, s System) System {
+	s.antiArmorFrom = gametime.MustParse(from)
 	return s
 }

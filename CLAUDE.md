@@ -14,9 +14,10 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `features/<area>/` holds the Gherkin feature files for one rules area (`dice`, `combat`, `movement`, ...), with their godog step definitions beside them. See [Behavior-driven development](#behavior-driven-development).
 - `internal/dice` rolls dice. Every random outcome goes through its `Source` interface.
 - `internal/breakdown` resolves Breakdown checks on the Breakdown Table [21.38].
+- `internal/gametime` counts game time: Operations Stages within Game-Turns, written `stage/turn`, and the month-and-week dates the rules sometimes use.
 - `internal/toe` holds the weapon systems that make up TOE Strength Points, with the Tank and Gun Characteristics Charts [4.47–4.49] as data.
 - `features/steps` holds step definitions shared by more than one feature area, such as the steps that fix the dice.
-- `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules.
+- `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules. See [The tests define the game](#the-tests-define-the-game).
 - `version.go` holds the version (`cna.Version()`, using `github.com/maloquacious/semver`).
 
 ## Commands
@@ -66,6 +67,24 @@ Every die roll and other random outcome uses `math/rand/v2` with a source that i
 - The same seed and the same sequence of player inputs must produce the same game. Record the seed with the game state so any game can be replayed.
 - Keep the order of rolls stable. Ranging over a map gives a random order, so sort the keys first whenever a loop draws random numbers.
 - In tests, use fixed seeds and assert on exact outcomes.
+
+## The tests define the game
+
+The feature files are the authority on how the game plays. The rulebooks, charts and errata are evidence for what the features should say, and the engine is whatever makes them pass.
+
+When a feature disagrees with one of the others, record the conflict and open an issue. Don't silently follow one source.
+
+- **The rules, charts or errata conflict with each other, or are wrong or silent:**
+  1. Add an entry to `RULINGS.md`: the cases involved, what each says (in our words), and the resolution. Use status Open until the user decides, and Decided after. Rulings are the user's call: propose a resolution, but don't decide one yourself.
+  2. Write `@ruling` scenarios that pin the decision down.
+  3. Open an issue on the docs repository, giving the file and line of each source, and link it from the ruling:
+     ```sh
+     gh issue create -R mdhender/cnadocs --assignee @me --label bug ...
+     ```
+     The docs record the text as printed, so suggest a `<!-- check: -->` comment rather than a change to the text.
+- **The engine disagrees with a feature,** and the fix isn't part of the current change: open an issue on this repository (`gh issue create -R mdhender/cna --assignee @me --label bug ...`), tag the failing scenario `@wip`, and add a comment linking the issue.
+
+Issues follow the no-quoting rule too: cite case numbers and line numbers, and describe the text in your own words.
 
 ## Behavior-driven development
 

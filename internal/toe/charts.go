@@ -12,6 +12,10 @@ package toe
 // the 7.62cm Pak(R) (15) and Marder III (25) are restored [4.49]. The
 // Commonwealth A9 Cruiser takes its Armor Protection from the Commonwealth
 // printing [4.47].
+//
+// The charts' notes give two guns no anti-armor rating until the first
+// Operations Stage of January 1942, marked here with antiArmorFrom
+// [4.48, 4.49].
 var systems = []System{
 	// Commonwealth Tank [4.47]
 	row(Commonwealth, Tank, "A9 Cruiser", "25", "1", "-", "3", "-", "1", "3/3", "2", "1R"),
@@ -59,7 +63,7 @@ var systems = []System{
 	row(Italian, Artillery, "65/17 Gun", "15", "-", "5", "0", "3", "-", "1/1", "1", "-"),
 	row(Italian, Artillery, "75/18 Gun-Howitzer", "15", "-", "6", "0", "5", "-", "1/0", "1", "-"),
 	sp(Italian, Artillery, "75/18 Gun", "20", "-", "6", "6", "4", "3", "3/3", "2", "1R"),
-	row(Italian, Artillery, "75/27 Gun", "15", "-", "6", "2", "4", "-", "1/1", "1", "-"),
+	antiArmorFrom("1/63", row(Italian, Artillery, "75/27 Gun", "15", "-", "6", "2", "4", "-", "1/1", "1", "-")),
 	row(Italian, Artillery, "100/17 Howitzer", "15", "-", "8", "0", "5", "-", "1/0", "1", "-"),
 	row(Italian, Artillery, "105/28 Gun", "15", "-", "9", "1", "7", "-", "1/1", "1", "-"),
 	row(Italian, Artillery, "149/13 Howitzer", "15", "-", "15", "0", "5", "-", "1/0", "1", "-"),
@@ -84,7 +88,7 @@ var systems = []System{
 	row(German, Tank, "Pz IV E", "25", "1", "-", "6", "-", "3", "5/5", "4", "0"),
 	row(German, Tank, "Pz IV F2 (Special)", "25", "1", "-", "8", "-", "4", "6/5", "4", "0"),
 	// German Artillery [4.49]
-	row(German, Artillery, "7.5 cm(IG18) Light Infantry Gun", "15", "-", "6", "3", "2", "-", "1/1", "1", "-"),
+	antiArmorFrom("1/63", row(German, Artillery, "7.5 cm(IG18) Light Infantry Gun", "15", "-", "6", "3", "2", "-", "1/1", "1", "-")),
 	row(German, Artillery, "10.5cm(K18) Medium Gun", "15", "-", "9", "1", "9", "-", "1/1", "1", "-"),
 	row(German, Artillery, "10.5cm(leFH18) Light Field Howitzer", "15", "-", "9", "2", "5", "-", "1/1", "1", "-"),
 	sp(German, Artillery, "10.5cm SP K18 Gun", "15", "-", "9", "2", "4", "2", "2/2", "2", "0"),

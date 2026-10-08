@@ -187,11 +187,10 @@ Feature: Tank and Gun Characteristics
 
   Rule: Some ratings change during the campaign
 
-    # These need the game calendar, which isn't built yet. Times are
-    # written stage/Game-Turn, as on the charts: 1/31 is Stage 1 of
-    # Game-Turn 31.
+    # Times are written stage/Game-Turn, as on the charts: 1/31 is
+    # Stage 1 of Game-Turn 31.
 
-    @case-4.45 @case-4.49 @ruling @wip
+    @case-4.45 @case-4.49 @ruling
     Scenario Outline: German tanks have a rating of 1R until Game-Turn 31
       Given the time is <time>
       Then the German "<system>" breaks down with a rating of <rating>
@@ -204,7 +203,7 @@ Feature: Tank and Gun Characteristics
         | 3/30 | Pz IV D  | 1R     |
         | 1/31 | Pz IV D  | 0      |
 
-    @case-4.48 @case-4.49 @wip
+    @case-4.48 @case-4.49
     Scenario Outline: Some guns have no anti-armor rating until January 1942
       Given the time is <time>
       Then the <nationality> "<system>" has an Anti-Armor Rating of <rating>
