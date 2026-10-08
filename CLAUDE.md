@@ -78,6 +78,7 @@ The feature files are the specification. They're written so players can check th
 - godog matches step text without regard to `Given`, `When` or `Then`, so an action and an assertion need different wording ("the unit suffers 10% Breakdown" versus "the result is 10% Breakdown").
 - Group a feature's scenarios with `Rule:`, one rule per idea, so a reader can check each idea against the rulebook on its own.
 - Quote names that can contain spaces or punctuation (`the Commonwealth "Heavy AA (3.7")" never breaks down`), and match them with `"(.+)"`, not `"([^"]+)"`, since some names contain quotes.
+- Write game times the way the charts do, Operations Stage then Game-Turn: `1/31` is Stage 1 of Game-Turn 31 [4.45].
 - Write a scenario for behavior that depends on something not yet built (such as the game calendar) and tag it `@wip`, so the requirement is recorded where players can see it.
 - Step definitions are thin. They set up state, call the engine, and compare results. Game logic belongs in `internal/`, never in steps.
 - Keep each scenario's state in a `world` struct that is reset before every scenario.

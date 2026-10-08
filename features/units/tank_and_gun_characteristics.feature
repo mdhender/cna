@@ -187,22 +187,31 @@ Feature: Tank and Gun Characteristics
 
   Rule: Some ratings change during the campaign
 
-    # These need the game calendar, which isn't built yet.
+    # These need the game calendar, which isn't built yet. Times are
+    # written stage/Game-Turn, as on the charts: 1/31 is Stage 1 of
+    # Game-Turn 31.
 
-    @case-4.49 @wip
-    Scenario: German tanks have a rating of 1R early in the campaign
-      # The chart's note names the "1/31" Game-Turn; see ruling R-004.
-      Given the Game-Turn is before the one named by the note to the German chart
-      Then the German "Pz III H" breaks down with a rating of 1R
+    @case-4.45 @case-4.49 @ruling @wip
+    Scenario Outline: German tanks have a rating of 1R until Game-Turn 31
+      Given the time is <time>
+      Then the German "<system>" breaks down with a rating of <rating>
+
+      Examples:
+        | time | system   | rating |
+        | 1/1  | Pz III H | 1R     |
+        | 3/30 | Pz III H | 1R     |
+        | 1/31 | Pz III H | 0      |
+        | 3/30 | Pz IV D  | 1R     |
+        | 1/31 | Pz IV D  | 0      |
 
     @case-4.48 @case-4.49 @wip
     Scenario Outline: Some guns have no anti-armor rating until January 1942
-      Given the Game-Turn is <turn>
+      Given the time is <time>
       Then the <nationality> "<system>" has an Anti-Armor Rating of <rating>
 
       Examples:
-        | turn | nationality | system                          | rating |
-        | 62   | Italian     | 75/27 Gun                       | 0      |
-        | 63   | Italian     | 75/27 Gun                       | 2      |
-        | 62   | German      | 7.5 cm(IG18) Light Infantry Gun | 0      |
-        | 63   | German      | 7.5 cm(IG18) Light Infantry Gun | 3      |
+        | time | nationality | system                          | rating |
+        | 3/62 | Italian     | 75/27 Gun                       | 0      |
+        | 1/63 | Italian     | 75/27 Gun                       | 2      |
+        | 3/62 | German      | 7.5 cm(IG18) Light Infantry Gun | 0      |
+        | 1/63 | German      | 7.5 cm(IG18) Light Infantry Gun | 3      |

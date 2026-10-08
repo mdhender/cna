@@ -51,12 +51,17 @@ The `@ruling` scenarios in `features/breakdown/rating.feature` and `features/uni
 
 ## R-004: When German tanks stop having a BAR of 1R
 
-- **Status:** Open
-- **Cases:** chart 4.49 (notes), 21.36
+- **Status:** Decided (2026-10-08)
+- **Cases:** chart 4.49 (notes), 4.45, 20.11, 20.55, 43.12, 21.36
 - **Docs issue:** [mdhender/cnadocs#4](https://github.com/mdhender/cnadocs/issues/4)
 
 A note to the German Tank and Gun Characteristics Chart gives all German tanks a BAR of 1R until the start of the "1/31" Game-Turn, after which the printed rating (0) applies.
-Case 21.36 says all German tanks have a BAR of 0, and doesn't mention the early rating.
-It isn't clear which Game-Turn "1/31" names: Game-Turn 31, or a date such as the turn containing January 31.
+It wasn't clear which turn "1/31" names, and Case 21.36 says all German tanks have a BAR of 0 without mentioning the early rating.
 
-The engine uses the printed rating until this is decided. The `@wip` scenario "German tanks have a rating of 1R early in the campaign" waits on this ruling and on the game calendar.
+**Resolution:** "1/31" is Stage 1 of Game-Turn 31. German tanks have a BAR of 1R through Stage 3 of Game-Turn 30, and the printed rating from Stage 1 of Game-Turn 31.
+
+- Case 4.45 defines the notation: the OA Charts give a unit's arrival as the Operations Stage, a slash, then the Game-Turn.
+- Cases 20.11, 20.55 and 43.12 use the same notation, and the stage number is never more than 3, the number of Operations Stages in a Game-Turn.
+- Case 21.36's BAR of 0 is the printed rating that applies from Game-Turn 31 on, so it doesn't conflict.
+
+The `@wip` scenario "German tanks have a rating of 1R until Game-Turn 31" pins this down. It waits on the game calendar.
