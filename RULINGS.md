@@ -26,6 +26,7 @@ The `@ruling` scenario "The Breakdown dice are read sequentially, not added" in 
 
 - **Status:** Open
 - **Cases:** 21.37d, chart 21.38 (notes)
+- **Docs issue:** [mdhender/cnadocs#2](https://github.com/mdhender/cnadocs/issues/2)
 
 Both sources agree that a Sandstorm shifts the Breakdown column one to the right, but they disagree on when it applies.
 Case 21.37d measures the unit's movement in Capability Points: the shift applies if at least half of the Capability Points spent in one movement (a Movement Phase, a Retreat, a Reaction and so on) were spent on a map section with Sandstorms.
