@@ -133,7 +133,7 @@ Then cover how the chart is used: the boundaries of each column and row, the shi
 `version.go` follows semantic versioning.
 
 - A code change always bumps the version. A new feature bumps the minor version. A bugfix, or a change to an existing feature with no external API change, bumps the patch version.
-- A documentation-only change doesn't need a bump, but may have one.
+- A documentation-only change doesn't need a bump, but may have one. Changing comments in a `.go` file is a code change, not documentation: bump the patch version.
 - You may commit to `main` and push upstream without asking, as long as any required version bump is made in `version.go` and that file is part of the same commit.
 
 ## Conventions
