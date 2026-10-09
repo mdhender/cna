@@ -13,6 +13,7 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/mdhender/cna/features/steps"
+	"github.com/mdhender/cna/internal/board"
 	"github.com/mdhender/cna/internal/dice"
 	"github.com/mdhender/cna/internal/gametime"
 	"github.com/mdhender/cna/internal/weather"
@@ -67,6 +68,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^a roll of (\d+) gives `+weatherKind+` weather$`, w.rollGives)
 	sc.Step(`^the weather is `+weatherKind+`$`, w.weatherIs)
 	sc.Step(`^the weather is `+weatherKind+` on map sections ([A-E](?:,[A-E])*)$`, w.weatherOn)
+	sc.Step(`^the weather is `+weatherKind+` in hex ([A-E] ?\d{4})$`, w.weatherInHex)
 	sc.Step(`^no more dice are thrown$`, w.noMoreDice)
 }
 
@@ -205,7 +207,7 @@ func locationsRead(table *godog.Table) error {
 	return errors.Join(errs...)
 }
 
-func joinSections(list []weather.Section) string {
+func joinSections(list []board.Section) string {
 	var s []string
 	for _, sec := range list {
 		s = append(s, sec.String())
@@ -230,12 +232,23 @@ func (w *world) weatherIs(want string) error {
 func (w *world) weatherOn(want, sections string) error {
 	var errs []error
 	for _, s := range strings.Split(sections, ",") {
-		sec := weather.Section(s[0])
+		sec := board.Section(s[0])
 		if got := w.result.On(sec); got != parseWeather(want) {
 			errs = append(errs, fmt.Errorf("map section %s: got %s, want %s", sec, got, want))
 		}
 	}
 	return errors.Join(errs...)
+}
+
+func (w *world) weatherInHex(want, hex string) error {
+	h, err := board.ParseHex(hex)
+	if err != nil {
+		return err
+	}
+	if got := w.result.InHex(h); got != parseWeather(want) {
+		return fmt.Errorf("hex %s: got %s, want %s", h, got, want)
+	}
+	return nil
 }
 
 func (w *world) noMoreDice() error {

@@ -153,14 +153,23 @@ Feature: Weather Table
 
   Rule: Sandstorms never strike Delta hexes
 
-    # The Delta is part of map section E. Applying this needs the map,
-    # which isn't built yet.
-
-    @case-29.41 @case-29.7 @wip
+    @case-29.41 @case-29.7
     Scenario: A Sandstorm on map section E spares the Delta
       Given the time is 1/5
       And the tens die will roll 5 and the ones die will roll 5
       And the die will roll 3
       When the weather is determined
-      Then the weather is Sandstorm on map section E outside the Delta
-      And the weather is Normal in the Delta hexes of map section E
+      Then the weather is Sandstorm on map sections D,E
+      And the weather is Sandstorm in hex E3116
+      And the weather is Normal in hex E3117
+      And the weather is Normal in hex E3215
+      And the weather is Sandstorm in hex D3116
+
+    @case-29.5 @case-29.58
+    Scenario: A Rainstorm on map section E strikes the Delta too
+      Given the time is 3/20
+      And the tens die will roll 6 and the ones die will roll 1
+      And the die will roll 3
+      When the weather is determined
+      Then the weather is Rainstorm in hex E3116
+      And the weather is Rainstorm in hex E3117

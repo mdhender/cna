@@ -15,6 +15,7 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `internal/dice` rolls dice. Every random outcome goes through its `Source` interface.
 - `internal/breakdown` resolves Breakdown checks on the Breakdown Table [21.38].
 - `internal/gametime` counts game time: Operations Stages within Game-Turns, written `stage/turn`, and the month-and-week dates the rules sometimes use.
+- `internal/board` names the hexes of the game-map (section plus RRCC number, as in C4807) and holds what the engine knows about them, starting with the Delta hexes. Map geometry will come from `github.com/maloquacious/hexg`.
 - `internal/weather` determines the weather for an Operations Stage: the Weather Table [29.61] and the Foul Weather Location Table [29.7].
 - `internal/toe` holds the weapon systems that make up TOE Strength Points, with the Tank and Gun Characteristics Charts [4.47–4.49] as data.
 - `features/steps` holds step definitions shared by more than one feature area: the steps that fix the dice, and the step that sets the game time.
@@ -113,6 +114,10 @@ The feature files are the specification. They're written so players can check th
 - `@wip` for scenarios that are written but not yet passing.
 
 Feature files are documentation, so the no-quoting rule applies to them. Describe rules in your own words. Chart data may go into `Examples:` tables.
+
+### Map data
+
+Map data is brought in as Go data, a piece at a time, as features need it. Michael Miller's Hex Database (2015) is a useful first draft but is known to have errors, and it stays out of this repository. The official map sections are the authority. A feature that adds map data starts with a scenario holding the data in a form a player can desk-check against the map (see `features/board/delta.feature`), plus scenarios for hexes already checked. A hex on a seam between sections is named by the eastern section's number (B3701, not A3734).
 
 ### Charts
 

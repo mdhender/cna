@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/mdhender/cna/internal/board"
 	"github.com/mdhender/cna/internal/dice"
 	"github.com/mdhender/cna/internal/gametime"
 )
@@ -74,19 +75,9 @@ func Lookup(s gametime.Season, roll int) Weather {
 	panic(fmt.Sprintf("weather: roll %d is not on the %s row", roll, s))
 }
 
-// Section is a section of the game-map, A to E.
-type Section byte
-
-// Sections lists every map section.
-var Sections = [...]Section{'A', 'B', 'C', 'D', 'E'}
-
-func (s Section) String() string {
-	return string(s)
-}
-
 // locations is the Foul Weather Location Table [29.7]: the map sections
 // struck by a Sandstorm or Rainstorm for each roll of one die.
-var locations = [6][]Section{
+var locations = [6][]board.Section{
 	{'A', 'B'},
 	{'C', 'D'},
 	{'D', 'E'},
@@ -97,7 +88,7 @@ var locations = [6][]Section{
 
 // Locate returns the map sections struck by foul weather for a roll of
 // one die.
-func Locate(die int) []Section {
+func Locate(die int) []board.Section {
 	return slices.Clone(locations[die-1])
 }
 
@@ -111,7 +102,7 @@ type Result struct {
 	// Struck the map sections it gives. Both are zero unless the weather
 	// is foul.
 	Die    int
-	Struck []Section
+	Struck []board.Section
 }
 
 // Determine rolls the weather for time t [29.1]. It throws two dice, and
@@ -128,9 +119,19 @@ func Determine(t gametime.Time, src dice.Source) Result {
 
 // On returns the weather on map section s. Foul weather strikes only the
 // sections it was located on; the others have Normal weather [29.1].
-func (r Result) On(s Section) Weather {
+func (r Result) On(s board.Section) Weather {
 	if r.Weather.Foul() && !slices.Contains(r.Struck, s) {
 		return Normal
 	}
 	return r.Weather
+}
+
+// InHex returns the weather in hex h. It is the weather on the hex's map
+// section, except that a Sandstorm never reaches a Delta hex [29.41, 29.7].
+func (r Result) InHex(h board.Hex) Weather {
+	w := r.On(h.Section)
+	if w == Sandstorm && board.IsDelta(h) {
+		return Normal
+	}
+	return w
 }
