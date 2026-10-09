@@ -25,13 +25,22 @@ The `@ruling` scenario "The Breakdown dice are read sequentially, not added" in 
 ## R-002: What decides whether a Sandstorm shifts the Breakdown column
 
 - **Status:** Open
-- **Cases:** 21.37d, chart 21.38 (notes)
+- **Cases:** 21.37d, 29.45, 29.41, chart 21.38 (notes)
 - **Docs issue:** [mdhender/cnadocs#2](https://github.com/mdhender/cnadocs/issues/2)
 
-Both sources agree that a Sandstorm shifts the Breakdown column one to the right, but they disagree on when it applies.
-Case 21.37d measures the unit's movement in Capability Points: the shift applies if at least half of the Capability Points spent in one movement (a Movement Phase, a Retreat, a Reaction and so on) were spent on a map section with Sandstorms.
-The notes under the Breakdown Table (21.38) measure Breakdown Points instead: the shift applies if at least half of the accumulated Breakdown Points were picked up in map sections with Sandstorms.
-The two can give different answers, for example when a unit moves cheaply along a road in a Sandstorm and then expensively across rough terrain in clear weather.
+All the sources agree that a Sandstorm shifts the Breakdown column one to the right, but they disagree on when it applies.
+
+- Case 21.37d measures the unit's movement in Capability Points: the shift applies if at least half of the Capability Points spent in one movement (a Movement Phase, a Retreat, a Reaction and so on) were spent on a map section with Sandstorms.
+- Case 29.45 also measures Capability Points: the shift applies if the unit spends half or more of its Capability Points for movement in a Movement Phase in hexes with a Sandstorm.
+- The notes under the Breakdown Table (21.38) measure Breakdown Points instead: the shift applies if at least half of the accumulated Breakdown Points were picked up in map sections with Sandstorms.
+
+The two measures can give different answers, for example when a unit moves cheaply along a road in a Sandstorm and then expensively across rough terrain in clear weather.
+The two cases also differ slightly on where: 21.37d counts movement on a map section with Sandstorms, while 29.45 counts movement in Sandstorm hexes. They differ in practice only where a Sandstorm doesn't reach every hex of a struck section: it never covers the Delta hexes of map section E [29.41, 29.7], and stops at the coastal hexes [29.46].
+
+**Proposed resolution:** measure Capability Points, as both cases do.
+For each movement (a Movement Phase, a Retreat, a Reaction and so on), the column shifts if half or more of the Capability Points the unit spent on that movement were spent in hexes that have a Sandstorm.
+Following 29.45, hexes a Sandstorm doesn't reach, such as the Delta, don't count, even on a struck map section.
+Two cases agree on Capability Points against one chart note, and the chart note is the only source that counts Breakdown Points.
 
 The Breakdown Table itself doesn't depend on this. `breakdown.Check` takes a yes-or-no `Sandstorm` flag, and the rule that sets it must be decided before movement is implemented.
 

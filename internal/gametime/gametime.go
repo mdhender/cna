@@ -157,3 +157,41 @@ func ParseDate(s string) (Date, error) {
 func (d Date) String() string {
 	return fmt.Sprintf("%s %s, %d", d.Month, weekNumerals[d.Week-1], d.Year)
 }
+
+// Season is a season of the year, which picks the row of the Weather
+// Table [29.1].
+type Season int
+
+const (
+	Spring Season = iota
+	Summer
+	Fall
+	Winter
+)
+
+func (s Season) String() string {
+	return [...]string{"Spring", "Summer", "Fall", "Winter"}[s]
+}
+
+// seasonStarts gives the week of the year each season starts, counting
+// January I as 0: Spring from March III, Summer from June III, Fall from
+// September III and Winter from December III [29.1] (ruling R-005).
+var seasonStarts = [...]int{
+	Spring: 2*weeksPerMonth + 2,
+	Summer: 5*weeksPerMonth + 2,
+	Fall:   8*weeksPerMonth + 2,
+	Winter: 11*weeksPerMonth + 2,
+}
+
+// SeasonOf returns the season of a Game-Turn.
+func SeasonOf(turn int) Season {
+	d := DateOf(turn)
+	week := (int(d.Month)-1)*weeksPerMonth + d.Week - 1
+	season := Winter // from December III through March II
+	for s := Spring; s <= Winter; s++ {
+		if week >= seasonStarts[s] {
+			season = s
+		}
+	}
+	return season
+}

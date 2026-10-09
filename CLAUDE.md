@@ -15,8 +15,9 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `internal/dice` rolls dice. Every random outcome goes through its `Source` interface.
 - `internal/breakdown` resolves Breakdown checks on the Breakdown Table [21.38].
 - `internal/gametime` counts game time: Operations Stages within Game-Turns, written `stage/turn`, and the month-and-week dates the rules sometimes use.
+- `internal/weather` determines the weather for an Operations Stage: the Weather Table [29.61] and the Foul Weather Location Table [29.7].
 - `internal/toe` holds the weapon systems that make up TOE Strength Points, with the Tank and Gun Characteristics Charts [4.47–4.49] as data.
-- `features/steps` holds step definitions shared by more than one feature area, such as the steps that fix the dice.
+- `features/steps` holds step definitions shared by more than one feature area: the steps that fix the dice, and the step that sets the game time.
 - `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules. See [The tests define the game](#the-tests-define-the-game).
 - `version.go` holds the version (`cna.Version()`, using `github.com/maloquacious/semver`).
 
@@ -101,7 +102,7 @@ The feature files are the specification. They're written so players can check th
 - Write a scenario for behavior that depends on something not yet built (such as the game calendar) and tag it `@wip`, so the requirement is recorded where players can see it.
 - Step definitions are thin. They set up state, call the engine, and compare results. Game logic belongs in `internal/`, never in steps.
 - Keep each scenario's state in a `world` struct that is reset before every scenario.
-- Fix the dice in rule scenarios with a scripted step such as "the tens die will roll 3 and the ones die will roll 4". Use a seeded roller only for scenarios about the dice themselves.
+- Fix the dice in rule scenarios with a scripted step such as "the tens die will roll 3 and the ones die will roll 4". Dice steps queue their faces in order, so a scenario can fix several rolls (the Weather Table's two dice, then the Foul Weather Location Table's one). Assert "no more dice are thrown" when a rule must not roll again. Use a seeded roller only for scenarios about the dice themselves.
 
 ### Tags
 

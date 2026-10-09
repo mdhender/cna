@@ -57,6 +57,17 @@ func NewScript(faces ...int) *Script {
 	return &Script{faces: faces}
 }
 
+// Add appends faces to the end of the script. It panics if a face is not
+// from 1 to 6.
+func (s *Script) Add(faces ...int) {
+	s.faces = append(s.faces, NewScript(faces...).faces...)
+}
+
+// Remaining returns the number of faces not yet rolled.
+func (s *Script) Remaining() int {
+	return len(s.faces)
+}
+
 // Face implements Source. It panics when the script runs out of faces.
 func (s *Script) Face() int {
 	if len(s.faces) == 0 {

@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/mdhender/cna/features/steps"
 	"github.com/mdhender/cna/internal/gametime"
 	"github.com/mdhender/cna/internal/toe"
 )
@@ -45,7 +46,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 		return ctx, nil
 	})
 
-	sc.Step(`^the time is (\S+)$`, w.timeIs)
+	steps.Time(sc, func(t gametime.Time) { w.time = &t })
 	sc.Step(`^the `+nationality+` (tank|artillery|anti-tank|anti-air) weapon systems read:$`, systemsRead)
 	sc.Step(`^the `+nationality+` "(.+)" reads:$`, systemReads)
 	sc.Step(`^the `+nationality+` "(.+)" has a CPA of (\S+)$`, hasCPA)
@@ -181,12 +182,6 @@ func hasArmorProtection(nat, name, want string) error {
 		return fmt.Errorf("%s Armor Protection: got %s, want %s", name, got, want)
 	}
 	return nil
-}
-
-func (w *world) timeIs(s string) error {
-	t, err := gametime.Parse(s)
-	w.time = &t
-	return err
 }
 
 func (w *world) breaksDownWith(nat, name, want string) error {
