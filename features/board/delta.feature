@@ -21,7 +21,7 @@ Feature: Delta hexes
         | 41  | 29            |
         | 39  | 20, 27-34     |
         | 38  | 19-33         |
-        | 37  | 15-16, 18-34  |
+        | 37  | 15-34         |
         | 36  | 14-33         |
         | 35  | 14-34         |
         | 34  | 15-33         |
@@ -91,9 +91,11 @@ Feature: Delta hexes
   Rule: A hex that is partly water takes the terrain of its land
 
     # E3717 and E3718 look alike on the map: mostly water, with a Delta
-    # marker reaching into the hex. The data has E3718 as Delta but E3717
-    # as Clear. See ruling R-006.
-    @case-8.37 @ruling @wip
+    # marker reaching into the hex. Miller's data had E3717 as Clear; ruling
+    # R-006 makes it Delta, like E3718. E0820 is partly water and Rough.
+    @case-8.37 @ruling
     Scenario: A partly water hex with a Delta marker is a Delta hex
       Then hex E3717 is a Delta hex
       And hex E3718 is a Delta hex
+      And hex E0819 is a Delta hex
+      And hex E0820 is not a Delta hex

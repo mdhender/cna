@@ -109,13 +109,13 @@ A Sandstorm or Rainstorm result leads to the Foul Weather Location Table. The We
 
 ## R-006: The terrain of a hex that is partly water
 
-- **Status:** Open
+- **Status:** Decided (2026-10-08)
 - **Cases:** 8.37
 
 Some hexes on the map are partly water and partly land. The rules and the Terrain Effects Chart give each hex one terrain type, but don't say how to type a hex that shows more than one, or one that is mostly water.
 
 On map section E, hexes E3717 and E3718 look alike: mostly water, with a Delta marker reaching into the hex. The engine's map data (first transcribed from Michael Miller's Hex Database) types E3718 as Delta but E3717 as Clear, with sea hexsides. E0819 and E0820 are partly water too: a lake runs through both, with Delta land in E0819 and Rough in E0820, and the data types them Delta and Rough.
 
-**Proposed resolution:** a hex that is partly water takes the terrain of its land. A hex showing a Delta marker is a Delta hex, so E3717 becomes Delta like E3718. The water is shown by the hex's sea hexsides, not by its terrain.
+**Resolution:** a hex that is partly water takes the terrain of its land. A hex showing a Delta marker is a Delta hex, so E3717 becomes Delta like E3718. The water is shown by the hex's sea hexsides, not by its terrain.
 
-The `@wip` `@ruling` scenario in `features/board/delta.feature` pins this down once decided.
+The engine's map data now has E3717 as Delta. The `@ruling` scenario "A partly water hex with a Delta marker is a Delta hex" in `features/board/delta.feature` pins this down.
