@@ -137,7 +137,17 @@ Along a track, a unit spends half the CP of the hex's terrain and half the CP of
 A vehicle going down an escarpment on a track pays the escarpment in full: 8 CP and 6 Breakdown Points on top of the halved hex [8.42].
 Vehicles still never go up an escarpment, even on a track [8.42].
 
-Tracks do cross escarpments on the map, so this matters in play. For example, a track goes down the escarpment from C4020 to C4121, from D1815 to D1716, and from B3901 (A3934 on sheet A) to A3933, all checked against the official map. Miller's hex database lists four more, not yet checked: between A4132 and A4133, A4431 and A4432, D1208 and D1308, and D2330 and D2429.
+Tracks do cross escarpments on the map, so this matters in play. Tracks cross escarpments at seven hexsides in Michael Miller's hex database, and all seven have been checked against the official map. Going down the escarpment, the track runs:
+
+- from A4133 to A4132
+- from A4432 to A4431
+- from B3901 (A3934 on sheet A) to A3933
+- from C4020 to C4121
+- from D1308 to D1208
+- from D1815 to D1716
+- from D2429 to D2330
+
+Miller's data has the direction right for all but C4020 to C4121, which it marks as down from both sides.
 
 Until this is decided, `terrain.Enter` refuses moves along a track.
 The `@ruling @wip` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
