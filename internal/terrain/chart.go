@@ -45,7 +45,7 @@ func row(t Terrain, cells ...string) Row {
 // note 8 to say what a track costs.
 //
 // Heavy Vegetation's Breakdown Value is printed "3." on the scan; the dot
-// is a speck beside the 3.
+// is a speck beside the 3 (mdhender/cnadocs#13).
 var Chart = []Row{
 	row(Clear, "Clear", "2", "2", "4", "-", "-", "-", "6"),
 	row(Gravel, "Gravel", "2", "2", "6", "-", "-", "-", "6"),

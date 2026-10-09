@@ -20,7 +20,7 @@ Feature: Terrain Effects Chart
   Rule: The engine's chart matches the printed chart, as corrected by the errata
 
     # Heavy Vegetation's Breakdown Value is printed "3." on the scan.
-    # The dot is a speck beside the 3.
+    # The dot is a speck beside the 3 (mdhender/cnadocs#13).
     @case-8.37 @errata
     Scenario: The Terrain Effects Chart
       Then the Terrain Effects Chart reads:
