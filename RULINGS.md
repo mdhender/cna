@@ -69,7 +69,7 @@ The `@ruling` scenario "German tanks have a rating of 1R until Game-Turn 31" in 
 
 ## R-005: When the seasons start
 
-- **Status:** Open
+- **Status:** Decided (2026-10-08)
 - **Cases:** 29.1, chart 29.61, errata 29.1 and 29.61
 - **Docs issues:** [mdhender/cnadocs#5](https://github.com/mdhender/cnadocs/issues/5) and [#6](https://github.com/mdhender/cnadocs/issues/6), both closed. The docs flag the conflicts with check comments (cnadocs commit `3949e92`).
 
@@ -84,10 +84,10 @@ With four Game-Turns to a month and Game-Turn 1 in September III, 1940, the 29.1
 The Weather Table also prints each Game-Turn block against the opposite season, which the errata acknowledges: the block 1–12 is printed on the Spring row but is Fall, and the Summer row's blocks are Winter. Its last block stops at Game-Turn 110, though the campaign runs to 111 (January I, 1943, in Winter).
 The weather results on each row fit the season named on that row (Summer is mostly Hot; Winter has no Hot and the most rain), so only the Game-Turn blocks are misplaced.
 
-**Proposed resolution:** follow the 29.1 table and its errata. Fall is Game-Turns 1–12, 49–60 and 97–108; Winter is 13–24, 61–72 and 109–111; Spring is 25–36 and 73–84; Summer is 37–48 and 85–96. The weather results in each row stay with the season named on that row.
-The calendar (`features/calendar/game_time.feature`) already checks that each season boundary in the 29.1 table falls 12 Game-Turns after the last. Weather isn't implemented yet.
+**Resolution:** follow the 29.1 table and its errata. Fall is Game-Turns 1–12, 49–60 and 97–108; Winter is 13–24, 61–72 and 109–111; Spring is 25–36 and 73–84; Summer is 37–48 and 85–96. The weather results in each row stay with the season named on that row.
+The calendar (`features/calendar/game_time.feature`) already checks that each season boundary in the 29.1 table falls 12 Game-Turns after the last. Weather isn't implemented yet; when it is, its feature starts with this table as its full-chart scenario, with `@ruling` scenarios for the season boundaries and Game-Turn 111.
 
-The Weather Table with this resolution applied:
+The Weather Table with the resolution applied:
 
 | Season | Starts | Game-Turns | | | Normal | Hot | Sandstorm | Rainstorm |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
