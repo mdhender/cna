@@ -17,6 +17,7 @@ This project is the game engine for SPI's **The Campaign for North Africa** (*CN
 - `internal/gametime` counts game time: Operations Stages within Game-Turns, written `stage/turn`, and the month-and-week dates the rules sometimes use.
 - `internal/board` names the hexes of the game-map (section plus RRCC number, as in C4807) and holds what the engine knows about them, starting with the Delta hexes. Map geometry will come from `github.com/maloquacious/hexg`.
 - `internal/weather` determines the weather for an Operations Stage: the Weather Table [29.61] and the Foul Weather Location Table [29.7].
+- `internal/terrain` holds the Terrain Effects Chart [8.37] and prices a move into a hex: the Capability Points spent and the Breakdown Points picked up.
 - `internal/toe` holds the weapon systems that make up TOE Strength Points, with the Tank and Gun Characteristics Charts [4.47–4.49] as data.
 - `features/steps` holds step definitions shared by more than one feature area: the steps that fix the dice, and the step that sets the game time.
 - `RULINGS.md` records how we resolve errors, conflicts and gaps in the rules. See [The tests define the game](#the-tests-define-the-game).

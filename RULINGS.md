@@ -119,3 +119,41 @@ On map section E, hexes E3717 and E3718 look alike: mostly water, with a Delta m
 **Resolution:** a hex that is partly water takes the terrain of its land. A hex showing a Delta marker is a Delta hex, so E3717 becomes Delta like E3718. The water is shown by the hex's sea hexsides, not by its terrain.
 
 The engine's map data now has E3717 as Delta. The `@ruling` scenario "A partly water hex with a Delta marker is a Delta hex" in `features/board/delta.feature` pins this down.
+
+## R-007: What it costs to move along a track
+
+- **Status:** Open
+- **Cases:** 8.33, 8.37 (Track row and note 8), 8.42, 8.46, errata 8.37
+- **Docs issue:** [mdhender/cnadocs#11](https://github.com/mdhender/cnadocs/issues/11)
+
+The sources give three different costs for moving along a track:
+
+- The Terrain Effects Chart prints a cost of 1 CP for a track, and its note 8 says a track halves the costs of terrain features and the Breakdown values of hexes and hexsides, except for a vehicle going down an escarpment.
+- The errata to 8.37 says the printed 1 is wrong and note 8 is right: a track halves the cost of the terrain it runs through.
+- Case 8.46 says a track costs 1 CP per hex, halves most hexside costs, and halves the Breakdown cost of the hex. Case 8.33 says a unit on a track ignores the other terrain in the hex and hexside, except for vehicles crossing escarpments.
+
+**Proposed resolution:** follow the errata and note 8, overriding Cases 8.33 and 8.46.
+Along a track, a unit spends half the CP of the hex's terrain and half the CP of each hexside feature, and a vehicle picks up half their Breakdown Points.
+A vehicle going down an escarpment on a track pays the escarpment in full: 8 CP and 6 Breakdown Points on top of the halved hex [8.42].
+Vehicles still never go up an escarpment, even on a track [8.42].
+
+Until this is decided, `terrain.Enter` refuses moves along a track.
+The `@ruling @wip` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
+
+## R-008: Where vehicles may go on a road
+
+- **Status:** Open
+- **Cases:** 8.37 (notes 2, 6, 9 and 11), 8.42, 8.44
+- **Docs issue:** [mdhender/cnadocs#12](https://github.com/mdhender/cnadocs/issues/12)
+
+A road cancels the costs of every hexside it crosses (note 6), and lets motorized units cross a Major River (note 11). But the sources don't agree on whether it opens two other kinds of terrain to vehicles:
+
+- **Escarpments.** The chart prohibits motorized units from going up an escarpment, and lets them go down one only on a track (note 9). Case 8.42 says no vehicle ever goes up an escarpment, and vehicles go down only along a track. Neither mentions roads, though the map runs roads up escarpments.
+- **Salt Marsh.** Note 2 lets most vehicles into or out of a Salt Marsh only on a track. Case 8.44 says on a road or track.
+
+**Proposed resolution:** a road opens both to vehicles.
+A unit moving along a road crosses an escarpment either way at the road's cost, as note 6 says for every hexside; the prohibitions in 8.42 and note 9 apply to units off the road.
+Vehicles may enter a Salt Marsh along a road, as Case 8.44 says.
+
+Until this is decided, `terrain.Enter` refuses vehicles along a road into a Salt Marsh and any unit along a road across an escarpment.
+The `@ruling @wip` scenarios "Vehicles use a road across an escarpment" and "Vehicles use a road into a Salt Marsh" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
