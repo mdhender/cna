@@ -58,13 +58,27 @@ Feature: Delta hexes
         | 2   | 26-27         |
         | 1   | 26-27         |
 
+    # E1430 is a city on the Nile with no Delta marker, which breaks the
+    # strip of Delta hexes along the river between E1330 and E1530.
     @case-8.37
     Scenario Outline: Hexes checked against the official map
       Then hex <hex> <is> a Delta hex
 
       Examples:
         | hex   | is     |
+        | E4228 | is     |
+        | E4129 | is     |
+        | E3215 | is     |
         | E3116 | is not |
         | E3117 | is     |
         | E3120 | is     |
-        | E3215 | is     |
+        | E1530 | is     |
+        | E1429 | is not |
+        | E1430 | is not |
+        | E1431 | is not |
+        | E1330 | is     |
+        | E0728 | is not |
+        | E0627 | is not |
+        | E0527 | is not |
+        | E0425 | is not |
+        | E0322 | is     |
