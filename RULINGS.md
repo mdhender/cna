@@ -122,7 +122,7 @@ The engine's map data now has E3717 as Delta. The `@ruling` scenario "A partly w
 
 ## R-007: What it costs to move along a track
 
-- **Status:** Open
+- **Status:** Decided (2026-10-08)
 - **Cases:** 8.33, 8.37 (Track row and note 8), 8.42, 8.46, errata 8.37
 - **Docs issue:** [mdhender/cnadocs#11](https://github.com/mdhender/cnadocs/issues/11)
 
@@ -132,7 +132,7 @@ The sources give three different costs for moving along a track:
 - The errata to 8.37 says the printed 1 is wrong and note 8 is right: a track halves the cost of the terrain it runs through.
 - Case 8.46 says a track costs 1 CP per hex, halves most hexside costs, and halves the Breakdown cost of the hex. Case 8.33 says a unit on a track ignores the other terrain in the hex and hexside, except for vehicles crossing escarpments.
 
-**Proposed resolution:** follow the errata and note 8, overriding Cases 8.33 and 8.46.
+**Resolution:** follow the errata and note 8, overriding Cases 8.33 and 8.46.
 Along a track, a unit spends half the CP of the hex's terrain and half the CP of each hexside feature, and a vehicle picks up half their Breakdown Points.
 A vehicle going down an escarpment on a track pays the escarpment in full: 8 CP and 6 Breakdown Points on top of the halved hex [8.42].
 Vehicles still never go up an escarpment, even on a track [8.42].
@@ -149,8 +149,11 @@ Tracks do cross escarpments on the map, so this matters in play. Tracks cross es
 
 Miller's data has the direction right for all but C4020 to C4121, which it marks as down from both sides.
 
-Until this is decided, `terrain.Enter` refuses moves along a track.
-The `@ruling @wip` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
+A non-motorized unit going down an escarpment on a track pays half, as for any other hexside, since the exception in note 8 is for vehicles.
+A track opens no other hexside or hex that the chart closes: vehicles still cross a Major River only on a road (note 11), and a Swamp is entered only on a road or railroad.
+
+`terrain.Enter` prices a move along a track this way.
+The `@ruling` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` pin this down.
 
 ## R-008: Where vehicles may go on a road
 

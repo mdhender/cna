@@ -39,7 +39,7 @@ type world struct {
 }
 
 // points matches a number of points as the chart writes them: 2, ½ or 2½.
-const points = `(\d+½?|½)`
+const points = `(\d+[½¼]?|[½¼])`
 
 func initializeScenario(sc *godog.ScenarioContext) {
 	w := &world{}
@@ -140,16 +140,17 @@ func parseHexsides(s string) ([]terrain.Terrain, error) {
 	return sides, nil
 }
 
-// parsePoints reads a number of points written 2, ½ or 2½.
+// parsePoints reads a number of points written 2, ½, 2½ or ¼.
 func parsePoints(s string) float64 {
-	whole, half := strings.CutSuffix(s, "½")
 	var n float64
-	if whole != "" {
-		i, _ := strconv.Atoi(whole)
-		n = float64(i)
+	if whole, ok := strings.CutSuffix(s, "½"); ok {
+		s, n = whole, 0.5
+	} else if whole, ok := strings.CutSuffix(s, "¼"); ok {
+		s, n = whole, 0.25
 	}
-	if half {
-		n += 0.5
+	if s != "" {
+		i, _ := strconv.Atoi(s)
+		n += float64(i)
 	}
 	return n
 }
@@ -164,6 +165,8 @@ func formatPoints(n float64) string {
 		return "½"
 	case n == float64(whole)+0.5:
 		return strconv.Itoa(whole) + "½"
+	case n == 0.25:
+		return "¼"
 	}
 	return strconv.FormatFloat(n, 'f', -1, 64)
 }

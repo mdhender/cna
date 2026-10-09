@@ -252,13 +252,12 @@ Feature: Terrain Effects Chart
 
   Rule: A track halves the cost of the terrain it runs through
 
-    # Ruling R-007 is Open. The chart prints a cost of 1 CP for a track,
-    # which the errata strikes in favor of note 8: a track halves the cost
-    # of the terrain and hexsides, except going down an escarpment.
+    # Ruling R-007. The chart prints a cost of 1 CP for a track, which the
+    # errata strikes in favor of note 8: a track halves the cost of the
+    # terrain and hexsides, except for a vehicle going down an escarpment.
     # Case 8.46 still says 1 CP per hex, and Case 8.33 says a unit on a
-    # track ignores the other terrain. The proposal follows the errata and
-    # note 8.
-    @case-8.33 @case-8.37 @case-8.46 @errata @ruling @wip
+    # track ignores the other terrain. We follow the errata and note 8.
+    @case-8.33 @case-8.37 @case-8.46 @errata @ruling
     Scenario Outline: Moving along a track
       Given the unit is <unit>
       When it moves along a track into a <terrain> hex
@@ -273,8 +272,9 @@ Feature: Terrain Effects Chart
         | motorized     | Rough            | 2  | 4  |
         | motorized     | Desert           | 2  | 12 |
         | motorized     | Salt Marsh       | 1  | 3  |
+        | motorized     | Major City       | ¼  | ¼  |
 
-    @case-8.37 @case-8.46 @errata @ruling @wip
+    @case-8.37 @case-8.46 @errata @ruling
     Scenario Outline: A track halves the cost of the hexside it crosses
       Given the unit is <unit>
       When it moves along a track into a Clear hex across <hexsides>
@@ -287,18 +287,39 @@ Feature: Terrain Effects Chart
         | motorized     | a Wadi           | 3  | 6  |
         | motorized     | a Minor River    | 4  | 2½ |
         | non-motorized | an Up Escarpment | 4  | 0  |
+        | non-motorized | a Down Escarpment | 3 | 0  |
+        | non-motorized | a Major River    | 5  | 0  |
 
-    @case-8.37 @case-8.42 @ruling @wip
+    # Note 8's exception is for vehicles; a non-motorized unit going down
+    # an escarpment on a track pays half, as for any other hexside.
+    @case-8.37 @case-8.42 @ruling
     Scenario: Vehicles pay in full to go down an escarpment on a track
       Given the unit is motorized
       When it moves along a track into a Clear hex across a Down Escarpment
       Then it spends 9 Capability Points
       And it picks up 8 Breakdown Points
 
-    @case-8.37 @case-8.42 @wip
+    @case-8.37 @case-8.42
     Scenario: Vehicles never go up an escarpment, even on a track
       Given the unit is motorized
       When it moves along a track into a Clear hex across an Up Escarpment
+      Then it may not move there
+
+    @case-8.37
+    Scenario Outline: A Swamp may not be entered on a track
+      Given the unit is <unit>
+      When it moves along a track into a Swamp hex
+      Then it may not move there
+
+      Examples:
+        | unit          |
+        | non-motorized |
+        | motorized     |
+
+    @case-8.37
+    Scenario: Vehicles cross a Major River only on a road, not a track
+      Given the unit is motorized
+      When it moves along a track into a Clear hex across a Major River
       Then it may not move there
 
   Rule: The weather changes the cost of some terrain

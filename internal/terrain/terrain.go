@@ -270,9 +270,7 @@ func Enter(m Mover, hex Terrain, hexsides []Terrain, route Route) (Move, error) 
 	case AlongRoad:
 		return alongRoad(m, hex, hexsides)
 	case AlongTrack:
-		// The chart, its errata and Cases 8.33 and 8.46 disagree on what
-		// a track costs.
-		return Move{}, fmt.Errorf("moving along a track: R-007 %w", ErrRuling)
+		return alongTrack(m, hex, hexsides)
 	}
 	return across(m, hex, hexsides)
 }
@@ -307,6 +305,46 @@ func across(m Mover, hex Terrain, hexsides []Terrain) (Move, error) {
 		mv.CP += e.cp(m).points
 		if m.vehicle() {
 			mv.Breakdown += e.breakdown.points
+		}
+	}
+	return mv, nil
+}
+
+// alongTrack prices a move along a track. Following ruling R-007, a track
+// halves the CP and Breakdown Points of the hex's terrain and of each
+// hexside feature, except that a vehicle going down an escarpment pays it
+// in full [8.37 note 8, errata 8.37]. This overrides the 1 CP per hex of
+// Case 8.46.
+func alongTrack(m Mover, hex Terrain, hexsides []Terrain) (Move, error) {
+	// A Swamp may be entered only on a road or railroad [8.37].
+	if hex == Swamp {
+		return Move{}, fmt.Errorf("Swamp on a track: %w", ErrProhibited)
+	}
+
+	e := moving[hex]
+	var mv Move
+	mv.CP = e.cp(m).points / 2
+	if m.vehicle() {
+		mv.Breakdown = e.breakdown.points / 2
+	}
+	for _, side := range hexsides {
+		e := moving[side]
+		switch {
+		case side == UpEscarpment && m.vehicle():
+			// No vehicle ever goes up an escarpment [8.42].
+			return Move{}, fmt.Errorf("%s up an escarpment: %w", m, ErrProhibited)
+		case e.cp(m).prohibited:
+			// A track opens no other prohibited hexside, such as a Major
+			// River, which needs a road [8.37 note 11].
+			return Move{}, fmt.Errorf("%s across %s on a track: %w", m, side, ErrProhibited)
+		case side == DownEscarpment && m.vehicle():
+			mv.CP += e.cp(m).points
+			mv.Breakdown += e.breakdown.points
+		default:
+			mv.CP += e.cp(m).points / 2
+			if m.vehicle() {
+				mv.Breakdown += e.breakdown.points / 2
+			}
 		}
 	}
 	return mv, nil
