@@ -114,6 +114,28 @@ Feature: Breakdown Table
         | Normal  | 41...50 |
         | Hot     | 51...60 |
 
+    # The rules measure this two ways: Cases 21.37d and 29.45 count
+    # Capability Points spent in the Sandstorm, while the notes under the
+    # Breakdown Table count Breakdown Points. Ruling R-002 follows the notes.
+    # A unit that moves cheaply along a road in a Sandstorm and then over
+    # rough ground in clear weather can spend most of its Capability Points
+    # in the Sandstorm but pick up most of its Breakdown Points outside it.
+    @case-21.38 @case-21.37 @ruling
+    Scenario Outline: Breakdown Points decide whether a Sandstorm shifts the column
+      Given the unit has accumulated <points> Breakdown Points
+      And <in sandstorm> of them were picked up in map sections with a Sandstorm
+      When the unit stops moving
+      Then it checks for Breakdown on the <column> column
+
+      Examples:
+        | points | in sandstorm | column  |
+        | 35     | 0            | 31...40 |
+        | 35     | 17           | 31...40 |
+        | 35     | 17.5         | 41...50 |
+        | 35     | 20           | 41...50 |
+        | 35     | 35           | 41...50 |
+        | 18     | 2            | 11...20 |
+
     @case-21.33
     Scenario Outline: The column cannot shift past either end of the table
       Given the unit has accumulated <points> Breakdown Points

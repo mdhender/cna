@@ -24,7 +24,7 @@ The `@ruling` scenario "The Breakdown dice are read sequentially, not added" in 
 
 ## R-002: What decides whether a Sandstorm shifts the Breakdown column
 
-- **Status:** Open
+- **Status:** Decided (2026-10-08)
 - **Cases:** 21.37d, 29.45, 29.41, chart 21.38 (notes)
 - **Docs issue:** [mdhender/cnadocs#2](https://github.com/mdhender/cnadocs/issues/2)
 
@@ -37,12 +37,12 @@ All the sources agree that a Sandstorm shifts the Breakdown column one to the ri
 The two measures can give different answers, for example when a unit moves cheaply along a road in a Sandstorm and then expensively across rough terrain in clear weather.
 The two cases also differ slightly on where: 21.37d counts movement on a map section with Sandstorms, while 29.45 counts movement in Sandstorm hexes. They differ in practice only where a Sandstorm doesn't reach every hex of a struck section: it never covers the Delta hexes of map section E [29.41, 29.7], and stops at the coastal hexes [29.46].
 
-**Proposed resolution:** measure Capability Points, as both cases do.
-For each movement (a Movement Phase, a Retreat, a Reaction and so on), the column shifts if half or more of the Capability Points the unit spent on that movement were spent in hexes that have a Sandstorm.
-Following 29.45, hexes a Sandstorm doesn't reach, such as the Delta, don't count, even on a struck map section.
-Two cases agree on Capability Points against one chart note, and the chart note is the only source that counts Breakdown Points.
+**Resolution:** measure Breakdown Points, as the notes under the Breakdown Table do.
+A Sandstorm shifts the Breakdown column one to the right if at least half of the Breakdown Points the unit has accumulated this Operations Stage were picked up in map sections with a Sandstorm.
+This overrides the Capability Point measure in Cases 21.37d and 29.45.
 
-The Breakdown Table itself doesn't depend on this. `breakdown.Check` takes a yes-or-no `Sandstorm` flag, and the rule that sets it must be decided before movement is implemented.
+`breakdown.SandstormShift` decides the shift from the points accumulated and the points picked up in a Sandstorm; its answer goes in `breakdown.Check.Sandstorm`.
+The `@ruling` scenario "Breakdown Points decide whether a Sandstorm shifts the column" in `features/breakdown/breakdown_table.feature` pins this down, including a unit that picks up most of its points outside the Sandstorm.
 
 ## R-003: A dash in the BAR column means the vehicles never break down
 

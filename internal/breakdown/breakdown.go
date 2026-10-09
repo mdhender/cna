@@ -181,7 +181,7 @@ type Check struct {
 	Points    float64 // Breakdown Points accumulated this Operations Stage
 	BAR       BAR     // Breakdown Adjustment Rating of the vehicles
 	Hot       bool    // the weather is Hot [21.37]
-	Sandstorm bool    // a Sandstorm shifts the column [21.37] (see ruling R-002)
+	Sandstorm bool    // a Sandstorm shifts the column [21.37]; see SandstormShift
 }
 
 // Column returns the column the check uses after all shifts, which are
@@ -199,6 +199,14 @@ func (c Check) Column() (Column, bool) {
 		shift++
 	}
 	return ColumnFor(c.Points).Shift(shift), true
+}
+
+// SandstormShift reports whether a Sandstorm shifts the column one to the
+// right: it does if at least half of the Breakdown Points the unit has
+// accumulated this Operations Stage were picked up in map sections with a
+// Sandstorm [21.38 notes] (ruling R-002).
+func SandstormShift(points, inSandstorm float64) bool {
+	return points > 0 && 2*inSandstorm >= points
 }
 
 // Result is the outcome of a Breakdown check.

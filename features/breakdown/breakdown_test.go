@@ -55,6 +55,7 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^the unit's Breakdown Adjustment Rating is (\w+)$`, w.rating)
 	sc.Step(`^the weather is (Normal|Hot)$`, w.weather)
 	sc.Step(`^a Sandstorm shifts the column$`, w.sandstorm)
+	sc.Step(`^(\d+(?:\.\d+)?) of them were picked up in map sections with a Sandstorm$`, w.inSandstorm)
 	sc.Step(`^the unit has (\d+) TOE Strength Points?$`, w.hasTOE)
 
 	sc.Step(`^the unit stops moving$`, w.stops)
@@ -90,6 +91,11 @@ func (w *world) weather(weather string) error {
 
 func (w *world) sandstorm() error {
 	w.check.Sandstorm = true
+	return nil
+}
+
+func (w *world) inSandstorm(points float64) error {
+	w.check.Sandstorm = breakdown.SandstormShift(w.check.Points, points)
 	return nil
 }
 
