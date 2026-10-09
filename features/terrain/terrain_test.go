@@ -51,6 +51,8 @@ func initializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^the unit is (non-motorized|motorized|Light Trucks|motorcycle infantry|motorcycle recce|recce)$`, w.unitIs)
 	sc.Step(`^it moves (?:(across country|along a road|along a track) )?into an? (.+?) hex(?: across (.+))?$`, w.moves)
 
+	sc.Step(`^it moves through these hexes:$`, w.movesThrough)
+
 	sc.Step(`^the Terrain Effects Chart reads:$`, w.chartReads)
 	sc.Step(`^note (\d+) is on the "(.+)" row only$`, w.noteOnRow)
 	sc.Step(`^the "(.+)" row gives no CP cost of its own$`, w.noCPCost)
@@ -82,6 +84,29 @@ var routes = map[string]terrain.Route{
 	"along a track":  terrain.AlongTrack,
 }
 
+// movesThrough reads a move of several hexes from a table with the
+// columns route, terrain and hexsides, and asks the engine for its cost.
+func (w *world) movesThrough(table *godog.Table) error {
+	var path []terrain.Step
+	for _, row := range table.Rows[1:] {
+		route, ok := routes[row.Cells[0].Value]
+		if !ok {
+			return fmt.Errorf("unknown route %q", row.Cells[0].Value)
+		}
+		hex, err := terrain.Parse(row.Cells[1].Value)
+		if err != nil {
+			return err
+		}
+		sides, err := parseHexsides(row.Cells[2].Value)
+		if err != nil {
+			return err
+		}
+		path = append(path, terrain.Step{Hex: hex, Hexsides: sides, Route: route})
+	}
+	w.move, w.err = terrain.Path(w.mover, path)
+	return nil
+}
+
 // moves reads the hex's terrain and a list of hexside features written
 // "a Wadi and a Minor River", and asks the engine for the cost.
 func (w *world) moves(route, hex, across string) error {
@@ -89,19 +114,30 @@ func (w *world) moves(route, hex, across string) error {
 	if err != nil {
 		return err
 	}
-	var sides []terrain.Terrain
-	if across != "" {
-		for name := range strings.SplitSeq(across, " and ") {
-			name = strings.TrimPrefix(strings.TrimPrefix(name, "an "), "a ")
-			side, err := terrain.Parse(name)
-			if err != nil {
-				return err
-			}
-			sides = append(sides, side)
-		}
+	sides, err := parseHexsides(across)
+	if err != nil {
+		return err
 	}
 	w.move, w.err = terrain.Enter(w.mover, t, sides, routes[route])
 	return nil
+}
+
+// parseHexsides reads a list of hexside features written "a Wadi and a
+// Minor River". An empty list means no features.
+func parseHexsides(s string) ([]terrain.Terrain, error) {
+	if s == "" {
+		return nil, nil
+	}
+	var sides []terrain.Terrain
+	for name := range strings.SplitSeq(s, " and ") {
+		name = strings.TrimPrefix(strings.TrimPrefix(name, "an "), "a ")
+		side, err := terrain.Parse(name)
+		if err != nil {
+			return nil, err
+		}
+		sides = append(sides, side)
+	}
+	return sides, nil
 }
 
 // parsePoints reads a number of points written 2, ½ or 2½.

@@ -223,6 +223,30 @@ func (e effects) cp(m Mover) cost {
 	return e.nonMot
 }
 
+// Step is one hex of a move: the terrain of the hex entered, the features
+// of the hexside crossed to enter it, and the route taken.
+type Step struct {
+	Hex      Terrain
+	Hexsides []Terrain
+	Route    Route
+}
+
+// Path returns what it costs a unit to make a move of several hexes: the
+// Capability Points spent and the Breakdown Points picked up along the way
+// [8.31, 21.23].
+func Path(m Mover, steps []Step) (Move, error) {
+	var total Move
+	for i, s := range steps {
+		mv, err := Enter(m, s.Hex, s.Hexsides, s.Route)
+		if err != nil {
+			return Move{}, fmt.Errorf("hex %d of the move: %w", i+1, err)
+		}
+		total.CP += mv.CP
+		total.Breakdown += mv.Breakdown
+	}
+	return total, nil
+}
+
 // Enter returns what it costs a unit to move into a hex of the given
 // terrain, crossing a hexside with the given features [8.31, 8.37].
 // A non-motorized unit picks up no Breakdown Points [21.21].

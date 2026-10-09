@@ -120,6 +120,25 @@ Feature: Terrain Effects Chart
         | motorized     | Clear   | a Minor River                 | 8  | 5  |
         | motorized     | Rough   | an Up Slope and a Minor River | 14 | 11 |
 
+  Rule: A move adds up the cost of every hex entered
+
+    # The example with Case 21.23: an Italian tank battalion of M13s moves
+    # four hexes east. It follows the road for two hexes, crossing a ridge
+    # on the road, which costs nothing extra. The road then bends away, so
+    # the battalion leaves it for a Rough hex, and crosses a second ridge
+    # into a Clear hex. The road hexes' own terrain doesn't matter.
+    @case-8.33 @case-8.37 @case-21.23
+    Scenario: The tank battalion in the example of Case 21.23
+      Given the unit is motorized
+      When it moves through these hexes:
+        | route          | terrain | hexsides |
+        | along a road   | Clear   | a Ridge  |
+        | along a road   | Clear   |          |
+        | across country | Rough   |          |
+        | across country | Clear   | a Ridge  |
+      Then it spends 11 Capability Points
+      And it picks up 15 Breakdown Points
+
   Rule: Some terrain is closed to some units
 
     @case-8.37 @case-8.42
