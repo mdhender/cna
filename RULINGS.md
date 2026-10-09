@@ -106,3 +106,16 @@ The Weather Table with the resolution applied:
 | Summer | June III | 37...48 | 85...96 | - | 11...23 | 24...55 | 56...66 | - |
 
 A Sandstorm or Rainstorm result leads to the Foul Weather Location Table. The Weather Table's footnote calls it Table 29.62, but no such table exists: it is 29.7 (cnadocs#6). The Weather Table is 29.61, as numbered by the charts booklet and the errata; the docs now point the rules' references to it there (cnadocs#9). The engine cites 29.61 and 29.7.
+
+## R-006: The terrain of a hex that is partly water
+
+- **Status:** Open
+- **Cases:** 8.37
+
+Some hexes on the map are partly water and partly land. The rules and the Terrain Effects Chart give each hex one terrain type, but don't say how to type a hex that shows more than one, or one that is mostly water.
+
+On map section E, hexes E3717 and E3718 look alike: mostly water, with a Delta marker reaching into the hex. The engine's map data (first transcribed from Michael Miller's Hex Database) types E3718 as Delta but E3717 as Clear, with sea hexsides. E0819 is another partly water hex: a lake with Delta around it, typed as Delta.
+
+**Proposed resolution:** a hex that is partly water takes the terrain of its land. A hex showing a Delta marker is a Delta hex, so E3717 becomes Delta like E3718. The water is shown by the hex's sea hexsides, not by its terrain.
+
+The `@wip` `@ruling` scenario in `features/board/delta.feature` pins this down once decided.

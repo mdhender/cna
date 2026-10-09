@@ -68,17 +68,31 @@ Feature: Delta hexes
         | hex   | is     |
         | E4228 | is     |
         | E4129 | is     |
+        | E3718 | is     |
+        | E3414 | is not |
         | E3215 | is     |
         | E3116 | is not |
         | E3117 | is     |
         | E3120 | is     |
+        | E2724 | is not |
         | E1530 | is     |
         | E1429 | is not |
         | E1430 | is not |
         | E1431 | is not |
         | E1330 | is     |
+        | E0819 | is     |
         | E0728 | is not |
         | E0627 | is not |
         | E0527 | is not |
         | E0425 | is not |
         | E0322 | is     |
+
+  Rule: A hex that is partly water takes the terrain of its land
+
+    # E3717 and E3718 look alike on the map: mostly water, with a Delta
+    # marker reaching into the hex. The data has E3718 as Delta but E3717
+    # as Clear. See ruling R-006.
+    @case-8.37 @ruling @wip
+    Scenario: A partly water hex with a Delta marker is a Delta hex
+      Then hex E3717 is a Delta hex
+      And hex E3718 is a Delta hex
