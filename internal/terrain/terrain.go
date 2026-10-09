@@ -154,10 +154,6 @@ type Move struct {
 // ErrProhibited is returned when a unit may not make a move.
 var ErrProhibited = errors.New("prohibited")
 
-// ErrRuling is returned for a move whose cost waits on an Open ruling in
-// RULINGS.md.
-var ErrRuling = errors.New("waits on a ruling")
-
 // cost is one cost cell of the chart, read for movement.
 type cost struct {
 	points     float64
@@ -268,7 +264,7 @@ func Enter(m Mover, hex Terrain, hexsides []Terrain, route Route) (Move, error) 
 
 	switch route {
 	case AlongRoad:
-		return alongRoad(m, hex, hexsides)
+		return alongRoad(m)
 	case AlongTrack:
 		return alongTrack(m, hex, hexsides)
 	}
@@ -353,20 +349,9 @@ func alongTrack(m Mover, hex Terrain, hexsides []Terrain) (Move, error) {
 // alongRoad prices a move along a road. The road's costs replace those of
 // the terrain in the hex [8.33], and it cancels the costs of the hexside
 // it crosses [8.37 note 6], so a motorized unit may cross a Major River
-// on a road [8.37 note 11].
-func alongRoad(m Mover, hex Terrain, hexsides []Terrain) (Move, error) {
-	for _, side := range hexsides {
-		if side == UpEscarpment || side == DownEscarpment {
-			// The chart lets a road cancel hexside costs, but Case 8.42
-			// keeps vehicles off escarpments except down a track.
-			return Move{}, fmt.Errorf("a road across an escarpment: R-008 %w", ErrRuling)
-		}
-	}
-	if hex == SaltMarsh && m == Motorized {
-		// Case 8.44 lets vehicles into a Salt Marsh on a road; note 2 of
-		// the chart says only on a track.
-		return Move{}, fmt.Errorf("%s along a road into a Salt Marsh: R-008 %w", m, ErrRuling)
-	}
+// on a road [8.37 note 11]. Following ruling R-008, a road also takes
+// vehicles across an escarpment either way, and into a Salt Marsh [8.44].
+func alongRoad(m Mover) (Move, error) {
 	e := moving[Road]
 	mv := Move{CP: e.cp(m).points}
 	if m.vehicle() {

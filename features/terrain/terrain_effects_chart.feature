@@ -224,11 +224,11 @@ Feature: Terrain Effects Chart
         | non-motorized | Clear   | a Major River                 | 1  | 0  |
         | motorized     | Clear   | a Major River                 | ½  | ½  |
 
-    # Ruling R-008 is Open. The chart lets a road cancel every hexside cost,
-    # but Case 8.42 keeps vehicles from going up an escarpment, and from
-    # going down one except on a track. The proposal lets vehicles use a
-    # road across an escarpment either way.
-    @case-8.37 @case-8.42 @ruling @wip
+    # Ruling R-008. The chart lets a road cancel every hexside cost, but
+    # Case 8.42 keeps vehicles from going up an escarpment, and from going
+    # down one except on a track. We let vehicles use a road across an
+    # escarpment either way. No road on the map is known to cross one.
+    @case-8.37 @case-8.42 @ruling
     Scenario Outline: Vehicles use a road across an escarpment
       Given the unit is motorized
       When it moves along a road into a Clear hex across <hexside>
@@ -240,10 +240,10 @@ Feature: Terrain Effects Chart
         | an Up Escarpment  |
         | a Down Escarpment |
 
-    # Ruling R-008 is Open. Case 8.44 lets any vehicle into a Salt Marsh on
-    # a road or track; the chart's note 2 names only the track. The
-    # proposal follows Case 8.44.
-    @case-8.37 @case-8.44 @ruling @wip
+    # Ruling R-008. Case 8.44 lets any vehicle into a Salt Marsh on a road
+    # or track; the chart's note 2 names only the track. We follow
+    # Case 8.44.
+    @case-8.37 @case-8.44 @ruling
     Scenario: Vehicles use a road into a Salt Marsh
       Given the unit is motorized
       When it moves along a road into a Salt Marsh hex

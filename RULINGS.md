@@ -160,7 +160,7 @@ The `@ruling` scenarios under "A track halves the cost of the terrain it runs th
 
 ## R-008: Where vehicles may go on a road
 
-- **Status:** Open
+- **Status:** Decided (2026-10-08)
 - **Cases:** 8.37 (notes 2, 6, 9 and 11), 8.42, 8.44
 - **Docs issue:** [mdhender/cnadocs#12](https://github.com/mdhender/cnadocs/issues/12)
 
@@ -170,9 +170,9 @@ A road cancels the costs of every hexside it crosses (note 6), and lets motorize
   No road on the map has yet been found crossing an escarpment, so this part may never arise in play. The road from C4020 into Sollum (C4021) crosses a slope, only a track crosses at Halfaya Pass (over a slope too), and the one road-and-escarpment hexside in Miller's hex database (C4120's northeast side) is an error: the road there runs beside the escarpment.
 - **Salt Marsh.** Note 2 lets most vehicles into or out of a Salt Marsh only on a track. Case 8.44 says on a road or track.
 
-**Proposed resolution:** a road opens both to vehicles.
+**Resolution:** a road opens both to vehicles.
 A unit moving along a road crosses an escarpment either way at the road's cost, as note 6 says for every hexside; the prohibitions in 8.42 and note 9 apply to units off the road.
 Vehicles may enter a Salt Marsh along a road, as Case 8.44 says.
 
-Until this is decided, `terrain.Enter` refuses vehicles along a road into a Salt Marsh and any unit along a road across an escarpment.
-The `@ruling @wip` scenarios "Vehicles use a road across an escarpment" and "Vehicles use a road into a Salt Marsh" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
+`terrain.Enter` prices a move along a road this way.
+The `@ruling` scenarios "Vehicles use a road across an escarpment" and "Vehicles use a road into a Salt Marsh" in `features/terrain/terrain_effects_chart.feature` pin this down.
