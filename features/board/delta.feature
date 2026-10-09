@@ -80,6 +80,7 @@ Feature: Delta hexes
         | E1430 | is not |
         | E1431 | is not |
         | E1330 | is     |
+        | E0820 | is not |
         | E0819 | is     |
         | E0728 | is not |
         | E0627 | is not |
