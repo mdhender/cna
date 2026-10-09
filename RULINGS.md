@@ -137,6 +137,8 @@ Along a track, a unit spends half the CP of the hex's terrain and half the CP of
 A vehicle going down an escarpment on a track pays the escarpment in full: 8 CP and 6 Breakdown Points on top of the halved hex [8.42].
 Vehicles still never go up an escarpment, even on a track [8.42].
 
+Tracks do cross escarpments on the map, so this matters in play. For example, a track goes down the escarpment from C4020 to C4121 and from D1815 to D1716 (both checked against the official map). Miller's hex database lists five more, not yet checked: between A3933 and B3901, A4132 and A4133, A4431 and A4432, D1208 and D1308, and D2330 and D2429.
+
 Until this is decided, `terrain.Enter` refuses moves along a track.
 The `@ruling @wip` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` hold the proposal.
 
@@ -148,7 +150,8 @@ The `@ruling @wip` scenarios under "A track halves the cost of the terrain it ru
 
 A road cancels the costs of every hexside it crosses (note 6), and lets motorized units cross a Major River (note 11). But the sources don't agree on whether it opens two other kinds of terrain to vehicles:
 
-- **Escarpments.** The chart prohibits motorized units from going up an escarpment, and lets them go down one only on a track (note 9). Case 8.42 says no vehicle ever goes up an escarpment, and vehicles go down only along a track. Neither mentions roads, though the map runs roads up escarpments.
+- **Escarpments.** The chart prohibits motorized units from going up an escarpment, and lets them go down one only on a track (note 9). Case 8.42 says no vehicle ever goes up an escarpment, and vehicles go down only along a track. Neither mentions roads.
+  No road on the map has yet been found crossing an escarpment, so this part may never arise in play. The road from C4020 into Sollum (C4021) crosses a slope, only a track crosses at Halfaya Pass (over a slope too), and the one road-and-escarpment hexside in Miller's hex database (C4120's northeast side) is an error: the road there runs beside the escarpment.
 - **Salt Marsh.** Note 2 lets most vehicles into or out of a Salt Marsh only on a track. Case 8.44 says on a road or track.
 
 **Proposed resolution:** a road opens both to vehicles.
