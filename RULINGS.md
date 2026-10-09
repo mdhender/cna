@@ -152,6 +152,8 @@ Miller's data has the direction right for all but C4020 to C4121, which it marks
 A non-motorized unit going down an escarpment on a track pays half, as for any other hexside, since the exception in note 8 is for vehicles.
 A track opens no other hexside or hex that the chart closes: vehicles still cross a Major River only on a road (note 11), and a Swamp is entered only on a road or railroad.
 
+Halving gives a quarter point in one place: a vehicle on a track into a Major City spends ¼ CP and picks up ¼ Breakdown Point, less than the road's ½. The engine does that for now; whether a track should give that benefit is an open question ([mdhender/cnadocs#14](https://github.com/mdhender/cnadocs/issues/14)).
+
 `terrain.Enter` prices a move along a track this way.
 The `@ruling` scenarios under "A track halves the cost of the terrain it runs through" in `features/terrain/terrain_effects_chart.feature` pin this down.
 
