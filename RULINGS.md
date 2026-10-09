@@ -96,4 +96,4 @@ The Weather Table with the resolution applied:
 | Spring | March III | 25...36 | 73...84 | - | 11...42 | 43...55 | 56...64 | 65...66 |
 | Summer | June III | 37...48 | 85...96 | - | 11...23 | 24...55 | 56...66 | - |
 
-A Sandstorm or Rainstorm result leads to the Foul Weather Location Table. The Weather Table's footnote calls it Table 29.62, but no such table exists: it is 29.7 (cnadocs#6). The rules number the Weather Table 29.6, while the charts booklet and the errata call it 29.61. The engine cites the rules' numbers, 29.6 and 29.7.
+A Sandstorm or Rainstorm result leads to the Foul Weather Location Table. The Weather Table's footnote calls it Table 29.62, but no such table exists: it is 29.7 (cnadocs#6). The Weather Table is 29.61, as numbered by the charts booklet and the errata; the docs now point the rules' references to it there (cnadocs#9). The engine cites 29.61 and 29.7.
