@@ -71,7 +71,7 @@ The `@ruling` scenario "German tanks have a rating of 1R until Game-Turn 31" in 
 
 - **Status:** Open
 - **Cases:** 29.1, chart 29.61, errata 29.1 and 29.61
-- **Docs issue:** [mdhender/cnadocs#5](https://github.com/mdhender/cnadocs/issues/5)
+- **Docs issues:** [mdhender/cnadocs#5](https://github.com/mdhender/cnadocs/issues/5) and [#6](https://github.com/mdhender/cnadocs/issues/6), both closed. The docs flag the conflicts with check comments (cnadocs commit `3949e92`).
 
 The seasons are named by month and week (the dating the errata calls abandoned), and three sources say when they start:
 
@@ -81,7 +81,19 @@ The seasons are named by month and week (the dating the errata calls abandoned),
 
 With four Game-Turns to a month and Game-Turn 1 in September III, 1940, the 29.1 table gives every season exactly 12 Game-Turns, starting with Fall at Game-Turn 1. The Weather Table's Game-Turn columns come in blocks of 12 (1–12, 13–24 and so on), so they match 29.1's starts, not the 29.61 errata's.
 
-The Weather Table also lists its Game-Turn blocks against the wrong seasons, which the errata acknowledges: the block 1–12 is printed on the Spring row but is Fall. Its last block stops at Game-Turn 110, though the campaign runs to 111.
+The Weather Table also prints each Game-Turn block against the opposite season, which the errata acknowledges: the block 1–12 is printed on the Spring row but is Fall, and the Summer row's blocks are Winter. Its last block stops at Game-Turn 110, though the campaign runs to 111 (January I, 1943, in Winter).
+The weather results on each row fit the season named on that row (Summer is mostly Hot; Winter has no Hot and the most rain), so only the Game-Turn blocks are misplaced.
 
 **Proposed resolution:** follow the 29.1 table and its errata. Fall is Game-Turns 1–12, 49–60 and 97–108; Winter is 13–24, 61–72 and 109–111; Spring is 25–36 and 73–84; Summer is 37–48 and 85–96. The weather results in each row stay with the season named on that row.
 The calendar (`features/calendar/game_time.feature`) already checks that each season boundary in the 29.1 table falls 12 Game-Turns after the last. Weather isn't implemented yet.
+
+The Weather Table with this resolution applied:
+
+| Season | Starts | Game-Turns | | | Normal | Hot | Sandstorm | Rainstorm |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Fall | September III | 1...12 | 49...60 | 97...108 | 11...35 | 36...54 | 55...61 | 62...66 |
+| Winter | December III | 13...24 | 61...72 | 109...111 | 11...52 | - | - | 53...66 |
+| Spring | March III | 25...36 | 73...84 | - | 11...42 | 43...55 | 56...64 | 65...66 |
+| Summer | June III | 37...48 | 85...96 | - | 11...23 | 24...55 | 56...66 | - |
+
+A Sandstorm or Rainstorm result leads to the Foul Weather Location Table. The Weather Table's footnote calls it Table 29.62, but no such table exists: it is 29.7 (cnadocs#6). The rules number the Weather Table 29.6, while the charts booklet and the errata call it 29.61. The engine cites the rules' numbers, 29.6 and 29.7.
